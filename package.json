@@ -34,6 +34,7 @@
     "glamor": "^2.20.40",
     "mdast-react-render": "^1.2.0",
     "next": "^6.0.3",
+    "raw-loader": "^0.5.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-textarea-autosize": "^6.1.0",

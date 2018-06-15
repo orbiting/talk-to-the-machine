@@ -4,7 +4,7 @@ import { renderMdast } from 'mdast-react-render'
 import { parse } from '@orbiting/remark-preset'
 import createSchema from '@project-r/styleguide/lib/templates/Article'
 
-import md from '../../../../Articles/article-talk-to-the-machine-1/article.md'
+import md from '../../../../Articles/article-talk-to-the-machine-2/article.md'
 
 const schema = createSchema()
 
