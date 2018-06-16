@@ -4,7 +4,7 @@
   "description": "custom components for the story, three bundles—one per part",
   "main": "index.js",
   "scripts": {
-    "dev": "rollup -c -w & cd test && node server.js",
+    "dev": "cd test && node server.js & rollup -c -w",
     "build": "rollup -c"
   },
   "repository": {

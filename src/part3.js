@@ -1,3 +1,31 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-export default () => <div>Part 3</div>
+import Bubble from './components/Bubble'
+
+const Wrapper = ({ messages, alignments = {} }) => {
+  if (messages) {
+    return messages.map((message, i) => {
+      const nextMessage = messages[i + 1] || {}
+      return (
+        <Bubble key={i}
+          name={nextMessage.author === message.author
+            ? undefined
+            : message.author}
+          align={alignments[message.author]}>
+          {message.text}
+        </Bubble>
+      )
+    })
+  }
+  return null
+}
+
+Wrapper.propTypes = {
+  messages: PropTypes.arrayOf(PropTypes.shape({
+    author: PropTypes.string,
+    text: PropTypes.string
+  }))
+}
+
+export default Wrapper
