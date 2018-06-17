@@ -19,6 +19,7 @@ const styles = {
     margin: 0,
     marginBottom: 5,
     padding: '5px 10px',
+    maxWidth: 400,
     ...fontStyles.sansSerifRegular16,
     [mediaQueries.mUp]: {
       ...fontStyles.sansSerifRegular18
@@ -33,7 +34,8 @@ const styles = {
     right: css({
       backgroundColor: '#2090ea',
       color: '#fff',
-      borderRadius: '10px 10px 3px 10px'
+      borderRadius: '10px 10px 3px 10px',
+      textAlign: 'left'
     })
   },
   cite: css({
