@@ -1,26 +1,53 @@
 import React, { Component } from 'react'
 import { css } from 'glamor'
-import { Button, Field } from '@project-r/styleguide'
+import { Button, Field, Label, Interaction, fontFamilies } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 
 import setupVis from './setupVis'
 import randomWrong from '../../lib/randomWrong'
 import { transformCode } from '../../lib/babel'
 
+import { t } from '../../lib/translate'
+
+const monoFontStyle = {
+  fontFamily: fontFamilies.monospaceRegular,
+  fontSize: '14px',
+  lineHeight: '1.3'
+}
+
 const styles = {
   autoSize: css({
-    minHeight: 40,
-    paddingTop: '7px !important',
-    paddingBottom: '6px !important',
-    background: 'transparent'
+    display: 'block',
+    border: 'none',
+    outline: 'none',
+    width: '100%',
+    maxWidth: '100%',
+    minWidth: '100%',
+    color: '#fff',
+    background: 'transparent',
+    padding: '2px 0 2px 16px',
+    ...monoFontStyle
+  }),
+  codeArea: css({
+    padding: 15,
+    backgroundColor: '#000',
+    color: '#fff',
+    ...monoFontStyle
+  }),
+  label: css({
+    color: '#ccc'
+  }),
+  ref: css({
+    color: '#fff'
   })
 }
 
-const renderAutoSizeInput = ({ref, ...inputProps}) => (
-  <AutosizeInput {...styles.autoSize}
-    {...inputProps}
-    inputRef={ref} />
-)
+const CodeLabel = ({ children }) => <div {...styles.label}>
+  {children}
+</div>
+const Ref = ({ children }) => <span {...styles.ref}>
+  {children}
+</span>
 
 const makeFn = code => new Function(
   'input',
@@ -93,29 +120,71 @@ class Sort extends Component {
   }
   render () {
     return <div>
+      <Interaction.H3>{t('sort/phase1/title')}</Interaction.H3>
+      <Interaction.P>{t('sort/phase1/description')}</Interaction.P>
       <div ref={this.setRef} />
-      <Field label='Code' value={this.state.code} renderInput={renderAutoSizeInput} black onChange={(_, code) => {
-        this.setState({
-          code
-        })
-        this.setState({
-          run: makeFn(code)
-        })
-      }} />
-      <Button black onClick={async e => {
-        e.preventDefault()
-        const returnValue = await this.state.run(this.state.data, () => {
-          return this.update([].concat(this.state.data))
-        })
-        this.update(returnValue || this.state.data).then(() => {
-          this.setState({data: returnValue || this.state.data})
-        })
-      }}>Run</Button>
-      {' '}
-      <Button black onClick={e => {
-        e.preventDefault()
-        this.vis.reset()
-      }}>Reset</Button>
+      <div {...styles.codeArea}>
+        <label>
+          <CodeLabel>{'function sort(input) {'}</CodeLabel>
+          <AutosizeInput {...styles.autoSize}
+            value={this.state.code}
+            onChange={e => {
+              const code = e.target.value
+
+              const nextState = {
+                code
+              }
+              let run
+              try {
+                run = makeFn(code)
+              } catch (e) {
+                nextState.codeError = e.toString()
+              }
+              nextState.run = run
+              this.setState(nextState)
+            }} />
+          <CodeLabel>{'}'}</CodeLabel>
+          <br />
+          <CodeLabel>
+            Programmieren 101<br /><br />
+            Erste Zahl mit Zweiter tauschen<br />
+            <Ref>
+              {'let tmp = input[0]'}<br />
+              {'input[0] = input[1]'}<br />
+              {'input[1] = tmp'}
+            </Ref><br />
+            Ist die Erste kleiner ist als die Zweite?<br />
+            <Ref>{'if (input[0] < input[1]) {'}</Ref>
+            {' /* tun Sie was hier! */ '}
+            <Ref>{'} '}<br />{'else {'}</Ref>
+            {' /* falls nicht */ '}
+            <Ref>{'}'}</Ref><br />
+            In einer Schlaufe?<br />
+            <Ref>
+              {'for (let i = 0; i < input.length; i++) {'}<br />
+              &nbsp;&nbsp;{'if (input[i] < input[i + 1]) {'}</Ref>
+              {' /* Code hier! */ '}
+              <Ref>{'}'}<br />
+              {'}'}
+            </Ref>
+          </CodeLabel>
+          <br />
+        </label>
+        <Button white onClick={async e => {
+          e.preventDefault()
+          const returnValue = await this.state.run(this.state.data, () => {
+            return this.update([].concat(this.state.data))
+          })
+          this.update(returnValue || this.state.data).then(() => {
+            this.setState({data: returnValue || this.state.data})
+          })
+        }}>Run</Button>
+        {' '}
+        <Button white onClick={e => {
+          e.preventDefault()
+          this.vis.reset()
+        }}>zurücksetzen</Button>
+      </div>
     </div>
   }
 }
