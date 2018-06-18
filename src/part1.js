@@ -1,3 +1,7 @@
+import 'babel-runtime/regenerator'
+
 import React from 'react'
 
-export default () => <div>Part 1</div>
+import Sort from './components/Sort'
+
+export default () => <Sort />
