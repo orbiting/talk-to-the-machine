@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-20T17:35:40.419Z",
+  "updated": "2018-06-20T18:35:30.557Z",
   "title": "live",
   "data": [
     {
@@ -140,7 +140,11 @@
     },
     {
       "key": "nn/network",
-      "value": "Live-Visualisierung des Netzwerk:"
+      "value": "Ihre Zeichnung wird live zentriert, invertiert und in das Netzwerk gespiesen:"
+    },
+    {
+      "key": "nn/legend",
+      "value": "Legende: Die violeten und grünen Quadrate sind Gewichte (weights), die Rechtecke Bevorzugungen der Knoten (biases). Grün ist positiv, violet negativ."
     },
     {
       "key": "nn/model/pretrained",
@@ -155,12 +159,36 @@
       "value": "Dieses Modell wurde in ihrem Browser erstellt und trainiert. Laut Testdaten hat es eine {accuracy}% Chance die richtige Ziffer zu erkennen."
     },
     {
+      "key": "nn/model/create/label",
+      "value": "Modell wechseln"
+    },
+    {
+      "key": "nn/model/create/new",
+      "value": "Neue Modell erstellen"
+    },
+    {
+      "key": "nn/model/create/load",
+      "value": "Daten laden (10mb)"
+    },
+    {
+      "key": "nn/model/create/train",
+      "value": "Modell trainieren"
+    },
+    {
+      "key": "nn/model/create/pretrained",
+      "value": "Bereits treniertes Modell wieder laden"
+    },
+    {
+      "key": "nn/model/create/warning",
+      "value": "Achtung: Besonders mobile Browser können beim Modell bauen abstürzen. Dies ist nicht weiter schlimm, aber wir haben Sie gewarnt ;)"
+    },
+    {
       "key": "nn/data",
       "value": "Datenquelle: MNIST"
     },
     {
       "key": "nn/credits",
-      "value": "Vielen Dank an <a href=\"https://twitter.com/tafsiri\">Yannick Assogba</a> und <a href=\"https://github.com/garamond\">Andreas Moor</a> für ihr Unterstützung bei der Entwicklung der Visualisierung."
+      "value": "Vielen Dank an <a href=\"https://twitter.com/tafsiri\">Yannick Assogba</a> und <a href=\"https://github.com/garamond\">Andreas Moor</a> für ihr Unterstützung bei der Entwicklung dieser Visualisierung."
     }
   ]
 }
