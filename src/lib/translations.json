@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-20T15:33:28.192Z",
+  "updated": "2018-06-20T17:35:40.419Z",
   "title": "live",
   "data": [
     {
@@ -116,11 +116,51 @@
     },
     {
       "key": "sort/compare/description",
-      "value": "Jedes Verfahren hat Vor- und Nachteile. Oft kommen in einem Program mehrere Algorithmen zum Einsatz, je nach Eingabedaten."
+      "value": "Jedes Verfahren hat Vor- und Nachteile. Oft kommen in einem Programm mehrere Algorithmen zum Einsatz, je nach Eingabedaten."
     },
     {
       "key": "sort/compare/your",
       "value": "Ihre Lösung"
+    },
+    {
+      "key": "sort/compare/credits",
+      "value": "Die Visualisierungen basieren auf Beispielen von <a href=\"https://bl.ocks.org/mbostock/6dcc9a177065881b1bc4\">Mike Bostock</a> und <a href=\"https://beta.observablehq.com/@tmcw/sorting-overview\">Tom MacWright</a>."
+    },
+    {
+      "key": "nn/title",
+      "value": "Das Lernbeispiel: Ziffernerkennung"
+    },
+    {
+      "key": "nn/description",
+      "value": "Dieses «Convolutional Neural Network» nutzt 6 Schichten mit bis zu 16 Knotenpunkten. Dies ist wenig, 80 Schichten und mehr sind nicht selten."
+    },
+    {
+      "key": "nn/draw",
+      "value": "Zeichnen Sie eine Ziffer:"
+    },
+    {
+      "key": "nn/network",
+      "value": "Live-Visualisierung des Netzwerk:"
+    },
+    {
+      "key": "nn/model/pretrained",
+      "value": "Dieses Modell wurde bereits trainiert und lediglich in ihren Browser geladen."
+    },
+    {
+      "key": "nn/model/untrained",
+      "value": "Dieses Modell wurde mit einer Prise Zufall in ihrem Browser erstellt und ist noch nicht trainiert. Es hat etwa eine 10% Chance die richtige Ziffer zu erkennen – zufällig."
+    },
+    {
+      "key": "nn/model/trained",
+      "value": "Dieses Modell wurde in ihrem Browser erstellt und trainiert. Laut Testdaten hat es eine {accuracy}% Chance die richtige Ziffer zu erkennen."
+    },
+    {
+      "key": "nn/data",
+      "value": "Datenquelle: MNIST"
+    },
+    {
+      "key": "nn/credits",
+      "value": "Vielen Dank an <a href=\"https://twitter.com/tafsiri\">Yannick Assogba</a> und <a href=\"https://github.com/garamond\">Andreas Moor</a> für ihr Unterstützung bei der Entwicklung der Visualisierung."
     }
   ]
 }

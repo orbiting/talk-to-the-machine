@@ -1,3 +1,5 @@
 import React from 'react'
 
-export default () => <div>Part 2</div>
+import NeuralNetwork from './components/NeuralNetwork'
+
+export default NeuralNetwork
