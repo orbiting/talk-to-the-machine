@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import { css } from 'glamor'
-import { Button, Field, Label, Interaction, fontFamilies } from '@project-r/styleguide'
+import {
+  Button, Field, Checkbox,
+  Label, Interaction,
+  fontFamilies, Center
+} from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 
 import setupVis from './setupVis'
@@ -39,6 +43,13 @@ const styles = {
   }),
   ref: css({
     color: '#fff'
+  }),
+  action: css({
+    color: '#fff',
+    cursor: 'pointer',
+    ':hover': {
+      color: '#fff'
+    }
   })
 }
 
@@ -78,7 +89,8 @@ class Sort extends Component {
     this.state = {
       data: randomWrong(props.answer),
       code: DEFAULT_CODE,
-      run: makeFn(DEFAULT_CODE)
+      run: makeFn(DEFAULT_CODE),
+      autoRun: true
     }
     this.setRef = ref => {
       this.ref = ref
@@ -103,6 +115,15 @@ class Sort extends Component {
       })
     }
   }
+  runCode () {
+    this.state.run(this.state.data, () => {
+      return this.update([].concat(this.state.data))
+    }).then(returnValue => {
+      this.update(returnValue || this.state.data).then(() => {
+        this.setState({data: returnValue || this.state.data})
+      })
+    })
+  }
   componentDidMount () {
     this.vis = setupVis({
       answer: this.props.answer,
@@ -119,78 +140,105 @@ class Sort extends Component {
     this.vis.render(this.state.data)
   }
   render () {
+    const { phase } = this.props
     return <div>
-      <Interaction.H3>{t('sort/phase1/title')}</Interaction.H3>
-      <Interaction.P>{t('sort/phase1/description')}</Interaction.P>
-      <div ref={this.setRef} />
+      <Center>
+        <Interaction.H3>{t(`sort/phase/${phase}/title`)}</Interaction.H3>
+        <Interaction.P>{t(`sort/phase/${phase}/description`)}</Interaction.P>
+        <div ref={this.setRef} />
+        <Label>{t(`sort/phase/${phase}/code`)}</Label>
+        <br />
+        <br />
+      </Center>
       <div {...styles.codeArea}>
-        <label>
-          <CodeLabel>{'function sort(input) {'}</CodeLabel>
-          <AutosizeInput {...styles.autoSize}
-            value={this.state.code}
-            onChange={e => {
-              const code = e.target.value
+        <Center>
+          <span {...styles.label}>{t('sort/controls/label')}{' '}</span>
+          <label {...styles.action}>
+            <input
+              type='checkbox'
+              checked={this.state.autoRun}
+              onChange={(e) => {
+                const autoRun = !!e.target.checked
+                if (autoRun) {
+                  this.runCode()
+                }
+                this.setState({autoRun})
+              }} />
+            {' '}
+            {t('sort/controls/autoRun')}
+          </label>
+          <span {...styles.label}>{', '}</span>
+          <a {...styles.action} onClick={e => {
+            e.preventDefault()
+            this.setState({
+              autoRun: true
+            })
+            this.vis.reset()
+          }}>{t('sort/controls/reset')}</a>
+          <br />
+          <br />
+          <label>
+            <CodeLabel>{'function sort(input) {'}</CodeLabel>
+            <AutosizeInput {...styles.autoSize}
+              value={this.state.code}
+              onChange={e => {
+                const code = e.target.value
 
-              const nextState = {
-                code
-              }
-              let run
-              try {
-                run = makeFn(code)
-              } catch (e) {
-                nextState.codeError = e.toString()
-              }
-              nextState.run = run
-              this.setState(nextState)
-            }} />
-          <CodeLabel>{'}'}</CodeLabel>
-          <br />
-          <CodeLabel>
-            Programmieren 101<br /><br />
-            Erste Zahl mit Zweiter tauschen<br />
-            <Ref>
-              {'let tmp = input[0]'}<br />
-              {'input[0] = input[1]'}<br />
-              {'input[1] = tmp'}
-            </Ref><br />
-            Ist die Erste kleiner ist als die Zweite?<br />
-            <Ref>{'if (input[0] < input[1]) {'}</Ref>
-            {' /* tun Sie was hier! */ '}
-            <Ref>{'} '}<br />{'else {'}</Ref>
-            {' /* falls nicht */ '}
-            <Ref>{'}'}</Ref><br />
-            In einer Schlaufe?<br />
-            <Ref>
-              {'for (let i = 0; i < input.length; i++) {'}<br />
-              &nbsp;&nbsp;{'if (input[i] < input[i + 1]) {'}</Ref>
-              {' /* Code hier! */ '}
-              <Ref>{'}'}<br />
-              {'}'}
-            </Ref>
-          </CodeLabel>
-          <br />
-        </label>
-        <Button white onClick={async e => {
-          e.preventDefault()
-          const returnValue = await this.state.run(this.state.data, () => {
-            return this.update([].concat(this.state.data))
-          })
-          this.update(returnValue || this.state.data).then(() => {
-            this.setState({data: returnValue || this.state.data})
-          })
-        }}>Run</Button>
-        {' '}
-        <Button white onClick={e => {
-          e.preventDefault()
-          this.vis.reset()
-        }}>zurücksetzen</Button>
+                const nextState = {
+                  code
+                }
+                let run
+                try {
+                  run = makeFn(code)
+                } catch (e) {
+                  nextState.codeError = e.toString()
+                }
+                nextState.run = run
+                this.setState(nextState, () => {
+                  if (this.state.autoRun) {
+                    this.runCode()
+                  }
+                })
+              }} />
+            <CodeLabel>{'}'}</CodeLabel>
+            <br />
+            <CodeLabel>
+              {t('sort/101/title')}<br /><br />
+              {t('sort/101/swap')}<br />
+              <Ref>
+                {'let tmp = input[0]'}<br />
+                {'input[0] = input[1]'}<br />
+                {'input[1] = tmp'}
+              </Ref><br />
+              {t('sort/101/if')}<br />
+              <Ref>{'if (input[0] < input[1]) {'}</Ref>
+              {` /* ${t('sort/101/if/true')} */ `}
+              <Ref>{'} '}<br />{'else {'}</Ref>
+              {` /* ${t('sort/101/if/false')} */ `}
+              <Ref>{'}'}</Ref><br />
+              {t('sort/101/for')}<br />
+              <Ref>
+                {'for (let i = 0; i < input.length; i++) {'}<br />
+                &nbsp;&nbsp;{'if (input[i] < input[i + 1]) {'}</Ref>
+                {` /* ${t('sort/101/for/inside')} */ `}
+                <Ref>{'}'}<br />
+                {'}'}
+              </Ref>
+            </CodeLabel>
+            <br />
+          </label>
+          <CodeLabel>{t.elements(`sort/phase/${phase}/protip`, {
+            input: <Ref key='input'>{'input'}</Ref>
+          })}</CodeLabel>
+        </Center>
       </div>
     </div>
   }
 }
 
 Sort.defaultProps = {
-  answer: [0, 1, 2, 3, 4]
+  answer: [0, 1, 2, 3, 4],
+  phase: '1'
 }
 
 export default Sort

@@ -1,14 +1,82 @@
 {
-  "updated": "2018-06-18T23:08:04.630Z",
+  "updated": "2018-06-20T14:29:49.791Z",
   "title": "live",
   "data": [
     {
-      "key": "sort/phase1/title",
+      "key": "sort/phase/1/title",
       "value": "Lernen Sie einen Trick!"
     },
     {
-      "key": "sort/phase1/description",
+      "key": "sort/phase/1/description",
       "value": "Bringen Sie die Kreise in Ordnung. Sortieren Sie die Zahlen aufsteigend."
+    },
+    {
+      "key": "sort/phase/1/code",
+      "value": "Schreiben Sie etwas Code um die Kreise zu sortieren. Ein kleines Einmaleins dazu finden Sie unter dem Eingabefeld. Total überfordert? Sie können die Kreise auch per Hand bewegen und in die richtige Reihenfolge bekommen."
+    },
+    {
+      "key": "sort/phase/1/protip",
+      "value": "ProTip™: {input} ist ein Array und muss verändert werden. Mutieren Sie mit gutem Gewissen."
+    },
+    {
+      "key": "sort/101/title",
+      "value": "Programmieren 1x1"
+    },
+    {
+      "key": "sort/101/swap",
+      "value": "Erste Zahl mit Zweiter tauschen"
+    },
+    {
+      "key": "sort/101/if",
+      "value": "Ist die Erste kleiner ist als die Zweite?"
+    },
+    {
+      "key": "sort/101/if/true",
+      "value": "tun Sie was hier!"
+    },
+    {
+      "key": "sort/101/if/false",
+      "value": "falls nicht"
+    },
+    {
+      "key": "sort/101/for",
+      "value": "In einer Schlaufe?"
+    },
+    {
+      "key": "sort/101/for/inside",
+      "value": "Code hier!"
+    },
+    {
+      "key": "sort/result/correct/generic",
+      "value": "Richtig!"
+    },
+    {
+      "key": "sort/result/correct/manual",
+      "value": "Sie habens irgendwie gelöst. Nicht für alle Fälle, aber für diesen Fall."
+    },
+    {
+      "key": "sort/result/correct/unkown",
+      "value": "Es funktioniert! Vielleicht mit einem Trick oder nicht mutierend. Aber es funktioniert."
+    },
+    {
+      "key": "sort/result/correct/cheat",
+      "value": "Naja, die Sortierfunktion ab Stange zu benutzten ist jetzt keine Leistung. Aber es löst das Problem."
+    },
+    {
+      "key": "sort/result/wrong",
+      "value": "Sie sind hier nicht nicht fertig. Aktuell: {current}, Ziel: {answer}."
+    },
+    {
+      "key": "sort/controls/label",
+      "value": "Optionen:"
+    },
+    {
+      "key": "sort/controls/autoRun",
+      "value": "Code ausführen"
+    },
+    {
+      "key": "sort/controls/reset",
+      "value": "zurücksetzen"
     }
   ]
 }

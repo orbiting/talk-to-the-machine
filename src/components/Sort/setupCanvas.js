@@ -107,6 +107,9 @@ export default ({width, x, domain, colorScale, duration, renderCircles}) => {
     for (let time0 = 0; time0 < time; time0++) {
       const record0 = history[time0]
       const record1 = history[time0 + 1]
+      if (!record1) {
+        break
+      }
       record0.forEach((d, i) => {
         drawPath(d, i, record1.indexOf(d), time0, time0 + 1, 1)
       })

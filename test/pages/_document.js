@@ -46,7 +46,7 @@ export default class MyDocument extends Document {
           />
           <style
             dangerouslySetInnerHTML={{
-              __html: fontFaces()
+              __html: fontFaces() + 'body {margin: 0;}'
             }}
           />
           {css
