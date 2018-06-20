@@ -1,26 +1,10 @@
 {
-  "updated": "2018-06-20T14:29:49.791Z",
+  "updated": "2018-06-20T15:33:28.192Z",
   "title": "live",
   "data": [
     {
-      "key": "sort/phase/1/title",
-      "value": "Lernen Sie einen Trick!"
-    },
-    {
-      "key": "sort/phase/1/description",
-      "value": "Bringen Sie die Kreise in Ordnung. Sortieren Sie die Zahlen aufsteigend."
-    },
-    {
-      "key": "sort/phase/1/code",
-      "value": "Schreiben Sie etwas Code um die Kreise zu sortieren. Ein kleines Einmaleins dazu finden Sie unter dem Eingabefeld. Total überfordert? Sie können die Kreise auch per Hand bewegen und in die richtige Reihenfolge bekommen."
-    },
-    {
-      "key": "sort/phase/1/protip",
-      "value": "ProTip™: {input} ist ein Array und muss verändert werden. Mutieren Sie mit gutem Gewissen."
-    },
-    {
       "key": "sort/101/title",
-      "value": "Programmieren 1x1"
+      "value": "Programmieren 1x1:"
     },
     {
       "key": "sort/101/swap",
@@ -77,6 +61,66 @@
     {
       "key": "sort/controls/reset",
       "value": "zurücksetzen"
+    },
+    {
+      "key": "sort/phase/1/title",
+      "value": "Lernen Sie einen Trick!"
+    },
+    {
+      "key": "sort/phase/1/description",
+      "value": "Bringen Sie die Kreise in Ordnung. Sortieren Sie die Zahlen aufsteigend."
+    },
+    {
+      "key": "sort/phase/1/code",
+      "value": "Schreiben Sie etwas JavaScript um die Kreise zu sortieren. Ein kleines Einmaleins dazu finden Sie unter dem Eingabefeld. Total überfordert? Sie können die Kreise auch per Hand bewegen und in die richtige Reihenfolge bekommen."
+    },
+    {
+      "key": "sort/phase/1/protip",
+      "value": "ProTip™: {input} ist ein Array und muss verändert werden. Mutieren Sie mit gutem Gewissen."
+    },
+    {
+      "key": "sort/phase/2/title",
+      "value": "Das mühsame Sortieren"
+    },
+    {
+      "key": "sort/phase/2/description",
+      "value": "Bringen Sie 20 Kreise in Ordnung. Sortieren Sie die Zahlen aufsteigend."
+    },
+    {
+      "key": "sort/phase/2/code",
+      "value": "Schreiben Sie etwas JavaScript um die Kreise zu sortieren."
+    },
+    {
+      "key": "sort/phase/2/protip",
+      "value": "ProTip™: {input} ist ein Array und muss verändert werden. Mutieren Sie mit gutem Gewissen."
+    },
+    {
+      "key": "sort/phase/3/title",
+      "value": "Der letzte Test"
+    },
+    {
+      "key": "sort/phase/3/description",
+      "value": "Bringen Sie 50 Kreise in eine aufsteigende Reihenfolge."
+    },
+    {
+      "key": "sort/phase/3/code",
+      "value": "Schreiben Sie etwas JavaScript um die Kreise zu sortieren. Total überfordert? Wenn Sie die ersten paar Kreise von Hand sortieren helfen wir Ihnen!"
+    },
+    {
+      "key": "sort/phase/3/protip",
+      "value": "ProTip™: {input} ist ein Array und muss verändert werden. Mutieren Sie mit gutem Gewissen."
+    },
+    {
+      "key": "sort/compare/title",
+      "value": "Sortieralgorithmen im Vergleich"
+    },
+    {
+      "key": "sort/compare/description",
+      "value": "Jedes Verfahren hat Vor- und Nachteile. Oft kommen in einem Program mehrere Algorithmen zum Einsatz, je nach Eingabedaten."
+    },
+    {
+      "key": "sort/compare/your",
+      "value": "Ihre Lösung"
     }
   ]
 }

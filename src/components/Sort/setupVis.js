@@ -34,7 +34,7 @@ export default ({ width, element, answer: domain, duration, onChange }) => {
   while (element.firstChild) {
     element.removeChild(element.firstChild)
   }
-  element.style = `position: relative; padding-top: ${domain.length * 20 * 2}px; overflow: hidden;`
+  element.style = `position: relative; padding-top: ${Math.min(window.innerHeight * 0.8,domain.length * 20 * 2)}px; overflow: hidden;`
   element.appendChild(renderCanvas.node)
   element.appendChild(renderCircles.node)
   
