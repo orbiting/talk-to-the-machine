@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "cd test && node server.js & rollup -c -w",
     "build": "rollup -c",
-    "translations": "gsheets --key=1FFbrwSf7hiRSwh9t4ORWIxN2SQRx-gUZkL62C-6wdGU --title=live --pretty --out src/lib/translations.json"
+    "translations": "gsheets --key=1FFbrwSf7hiRSwh9t4ORWIxN2SQRx-gUZkL62C-6wdGU --title=live --pretty --out src/lib/translations.json",
+    "deploy": "s3cmd sync --verbose --acl-public build/ s3://republik-assets/dynamic-components/talk-to-the-machine/",
+    "deploy:nn-assets": "s3cmd sync --verbose --acl-public src/components/NeuralNetwork/assets/ s3://republik-assets/dynamic-components/talk-to-the-machine/neural-network/"
   },
   "repository": {
     "type": "git",
