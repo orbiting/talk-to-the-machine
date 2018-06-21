@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-21T07:57:05.330Z",
+  "updated": "2018-06-21T12:25:57.204Z",
   "title": "live",
   "data": [
     {
@@ -128,7 +128,7 @@
     },
     {
       "key": "sort/compare/credits",
-      "value": "Die Visualisierungen basieren auf Beispielen von <a href=\"https://bl.ocks.org/mbostock/6dcc9a177065881b1bc4\">Mike Bostock</a> und <a href=\"https://beta.observablehq.com/@tmcw/sorting-overview\">Tom MacWright</a>."
+      "value": "Die Visualisierungen basieren auf Beispielen von <a href=\"https://bl.ocks.org/mbostock/6dcc9a177065881b1bc4\">Mike Bostock</a> und <a href=\"https://beta.observablehq.com/@tmcw/sorting-overview\">Tom MacWright</a>. Vielen Dank für Ihre Arbeit!"
     },
     {
       "key": "nn/title",
@@ -191,12 +191,8 @@
       "value": "Achtung: Besonders mobile Browser können beim Modellbauen abstürzen. Dies ist nicht weiter schlimm, aber wir haben Sie gewarnt ;)"
     },
     {
-      "key": "nn/data",
-      "value": "Datenquelle: <a href=\"http://yann.lecun.com/exdb/mnist/\">MNIST<a/>"
-    },
-    {
       "key": "nn/credits",
-      "value": "Vielen Dank an <a href=\"https://twitter.com/tafsiri\">Yannick Assogba</a> und <a href=\"https://github.com/garamond\">Andreas Moor</a> für Ihre Unterstützung bei der Entwicklung dieser Visualisierung."
+      "value": "Datenquelle: <a href=\"http://yann.lecun.com/exdb/mnist/\">MNIST<a/>. Vielen Dank an <a href=\"https://twitter.com/tafsiri\">Yannick Assogba</a> und <a href=\"https://github.com/garamond\">Andreas Moor</a> für Ihre Unterstützung bei der Entwicklung dieser Visualisierung."
     }
   ]
 }

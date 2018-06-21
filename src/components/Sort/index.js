@@ -145,9 +145,7 @@ class Sort extends Component {
           const radius = Math.min(30, Math.max(size / 2 - 5, 2))
           const svgHeight = CIRCLE_PADDING * 2 + radius * 2
 
-          const nextState = {width, radius, svgHeight}
-          this.setState(nextState)
-          return nextState
+          this.setState({width, radius, svgHeight})
         }
       }
       return this.state
