@@ -6,59 +6,40 @@ import {
   drag
 } from 'd3'
 
-export default ({width, x, domain, colorScale, onChange, duration}) => {
-  const padding = 50
-  const size = Math.max(x.step(), 4)
-  const radius = Math.min(30, Math.max(size / 2 - 5, 2))
-  const height = padding * 2 + radius * 2
-  
-  const svgNode = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-  svgNode.setAttribute('width', width)
-  svgNode.setAttribute('height', height)
-  svgNode.style.position = 'relative'
+export const CIRCLE_PADDING = 50
+ 
+function endAll(transition, onEnd) {
+  if (!onEnd) {
+    return
+  }
+  let n = transition.size()
+  transition.on('end', () => {
+    --n
+    if (!n) {
+      onEnd()
+    }
+  })
+}
+function textColor(bgColor) {
+  const color = rgb(bgColor)
+  const yiq = (color.r * 299 + color.g * 587 + color.b * 114) / 1000
+  return yiq >= 128 ? 'black' : 'white'
+}
 
+export default ({node, x, domain, colorScale, onChange, duration}) => {
   let circleData = []
   
-  function endAll(transition, onEnd) {
-    if (!onEnd) {
-      return
-    }
-    let n = transition.size()
-    transition.on('end', () => {
-      --n
-      if (!n) {
-        onEnd()
-      }
-    })
-  }
-  function textColor(bgColor) {
-    const color = rgb(bgColor)
-    const yiq = (color.r * 299 + color.g * 587 + color.b * 114) / 1000
-    return yiq >= 128 ? 'black' : 'white'
-  }
-  
-  const render = (data, onEnd) => {
-    // const rows = Math.ceil(data.length / ((width - padding) / size))
-    // const columns = Math.ceil(data.length / rows)
-    // const xPad = (width - size * columns) / 2
-    // const height = rows * size + padding
-    
-    
-    const svg = select(svgNode)
-    svg.attr('width', width)
-    svg.attr('height', height)
-    svg.attr('viewBox', [0, 0, width, height])
+  const render = ({data, radius, onEnd}) => {
+    const svg = select(node)
     
     circleData = data.map((label, i) => {
       const d = (
         circleData.find(datum => datum.label === label) ||
         {label}
       )
-      // const row = Math.floor(i / columns)
-      // d.x = xPad + i % columns * size
-      // d.y = padding / 2 + row * size + size / 2
+
       d.x = x(i)
-      d.y = padding + radius
+      d.y = CIRCLE_PADDING + radius
       return d
     })
   
@@ -74,15 +55,7 @@ export default ({width, x, domain, colorScale, onChange, duration}) => {
   
     function dragended() {
       select(this).select('circle').attr('stroke', 'none')
-      
-      //onChange(circleData
-      //  .map(d => ({
-      //    label: d.label,
-      //    x: d.x,
-      //    row: Math.max(0, Math.floor((d.y - padding / 2) / size))
-      //  }))
-      //  .sort((a, b) => ascending(a.row, b.row) || ascending(a.x, b.x))
-      //  .map(d => d.label))
+
       onChange(circleData
         .slice()
         .sort((a, b) => ascending(a.x, b.x))
@@ -112,12 +85,7 @@ export default ({width, x, domain, colorScale, onChange, duration}) => {
       .duration(duration)
       .attr('transform', d => `translate(${[d.x, d.y]})`)
       .call(endAll, onEnd)
-  
-    return svgNode
   }
-  render.node = svgNode
-  render.height = height
-  render.padding = padding
   
   return render
 }

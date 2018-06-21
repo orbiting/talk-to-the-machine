@@ -7,7 +7,15 @@ import {
 } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 
-import setupVis from './setupVis'
+import {
+  scaleLinear, scaleSequential,
+  scalePoint,
+  interpolateCubehelix, interpolateRainbow,
+  hsl
+} from 'd3'
+
+import setupCircles, { CIRCLE_PADDING } from './setupCircles'
+import setupCanvas from './setupCanvas'
 import randomWrong from '../../lib/randomWrong'
 import { transformCode } from '../../lib/babel'
 
@@ -86,38 +94,90 @@ class Sort extends Component {
   constructor (props, ...args) {
     super(props, ...args)
 
+    const { answer } = props
+
+    const maxIndex = answer.length - 1
+    this.colorScale = maxIndex < 9
+      ? scaleLinear()
+        .interpolate(interpolateCubehelix)
+        .domain([0, maxIndex / 2, maxIndex])
+        .range([hsl('rgb(24,100,170)'), hsl('#FFB3E8'), hsl('rgb(187,21,26)')])
+      : scaleSequential(interpolateRainbow).domain([0, maxIndex * 1.16])
+
+    this.x = scalePoint()
+      .domain(answer.map((d, i) => i))
+      .padding(2)
+
+    const start = randomWrong(props.answer)
     this.state = {
-      data: randomWrong(props.answer),
+      data: start,
+      code: '// Ihr Code',
       code: DEFAULT_CODE,
       run: makeFn(DEFAULT_CODE),
-      autoRun: true
+      autoRun: true,
+      history: [start.slice()],
+      svgHeight: 0
     }
     this.setRef = ref => {
       this.ref = ref
     }
 
-    let lastData = [].concat(this.state.data)
+    this.measure = () => {
+      if (this.ref) {
+        const { width } = this.ref.getBoundingClientRect()
+        if (width !== this.state.width) {
+          this.x.range([0, width]).round(true)
+
+          const size = Math.max(this.x.step(), 4)
+          const radius = Math.min(30, Math.max(size / 2 - 5, 2))
+          const svgHeight = CIRCLE_PADDING * 2 + radius * 2
+
+          const nextState = {width, radius, svgHeight}
+          this.setState(nextState)
+          return nextState
+        }
+      }
+      return this.state
+    }
+
+    this.record = (nextData) => {
+      const { history } = this.state
+      const previous = history[history.length - 1]
+      if (JSON.stringify(previous) === JSON.stringify(nextData)) {
+        return
+      }
+      history.push(nextData.slice())
+      return true
+    }
     this.update = async (d) => {
-      if (d.some((item, index, all) => all.indexOf(item) !== index)) {
+      if (!d || d.some((item, index, all) => all.indexOf(item) !== index)) {
         // intermediate state with duplicates
         return
       }
-      if (JSON.stringify(d) === JSON.stringify(lastData)) {
-        // same
-        return 
-      }
-      lastData = d
-
-      return new Promise((resolve) => {
-        this.vis.update(d, () => {
-          resolve()
+      if (this.record(d)) {
+        return new Promise((resolve) => {
+          this.circles({
+            data: this.state.data,
+            radius: this.state.radius,
+            onEnd: () => {
+              resolve()
+            }
+          })
+          this.canvas({
+            width: this.state.width,
+            history: this.state.history
+          })
         })
-      })
+      }
     }
+
   }
   runCode () {
+    if (!this.state.run) {
+      return
+    }
     this.state.run(this.state.data, () => {
-      return this.update([].concat(this.state.data))
+      return this.update(this.state.data)
     }).then(returnValue => {
       this.update(returnValue || this.state.data).then(() => {
         this.setState({data: returnValue || this.state.data})
@@ -125,27 +185,65 @@ class Sort extends Component {
     })
   }
   componentDidMount () {
-    this.vis = setupVis({
-      answer: this.props.answer,
-      duration: 400,
-      element: this.ref,
-      width: 280,
-      onChange: data => {
-        this.setState({data})
-      }
+    window.addEventListener('resize', this.measure)
+    this.measure()
+
+    const duration = 400
+    const { x, colorScale } = this
+    const { width } = this.state
+    const { answer } = this.props
+    const onChange = data => {
+      this.record(data)
+      this.setState({data})
+    }
+    this.canvas = setupCanvas({
+      node: this.ref.firstChild,
+      x, domain: answer, colorScale, duration
     })
-    this.vis.render(this.state.data)
+    this.circles = setupCircles({
+      node: this.ref.childNodes[1],
+      x,
+      domain: answer,
+      colorScale,
+      duration,
+      onChange
+    })
   }
-  componentDidUpdate () {
-    this.vis.render(this.state.data)
+  componentDidUpdate (prevProps, prevState) {
+    if (prevState.data !== this.state.data || prevState.width !== this.state.width) {
+      this.circles({
+        data: this.state.data,
+        radius: this.state.radius
+      })
+      this.canvas({
+        width: this.state.width,
+        history: this.state.history
+      })
+    }
+  }
+  componentWillUnmount () {
+    window.removeEventListener('resize', this.measure)
   }
   render () {
     const { phase } = this.props
+    const { width, svgHeight } = this.state
     return <div>
       <Center>
         <Interaction.H3>{t(`sort/phase/${phase}/title`)}</Interaction.H3>
         <Interaction.P>{t(`sort/phase/${phase}/description`)}</Interaction.P>
-        <div ref={this.setRef} />
+        <div ref={this.setRef} style={{
+          position: 'relative',
+          paddingTop: 200,
+          overflow: 'hidden'
+        }}>
+          <canvas style={{
+            position: 'absolute',
+            left: 0,
+            bottom: svgHeight - CIRCLE_PADDING
+          }} />
+          <svg width={width} height={svgHeight}
+            style={{position: 'relative'}} />
+        </div>
         <Label>{t(`sort/phase/${phase}/code`)}</Label>
         <br />
         <br />
@@ -170,10 +268,14 @@ class Sort extends Component {
           <span {...styles.label}>{', '}</span>
           <a {...styles.action} onClick={e => {
             e.preventDefault()
+            const start = randomWrong(this.props.answer)
             this.setState({
+              start,
+              data: start,
+              history: [start.slice()],
               autoRun: true
             })
-            this.vis.reset()
+            this.canvas.reset()
           }}>{t('sort/controls/reset')}</a>
           <br />
           <br />

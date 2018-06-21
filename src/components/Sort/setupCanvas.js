@@ -1,21 +1,16 @@
 import { scaleLinear, transition } from 'd3'
 
-export default ({width, x, domain, colorScale, duration, renderCircles}) => {
+export default ({node, x, domain, colorScale, duration}) => {
   const margin = {top: 20, right: 0, bottom: 10, left: 0}
   const rowHeight = 20
   const strokeWidth = 6
-
-  const bottom = renderCircles.height - renderCircles.padding - rowHeight
   
   const dpi = window.devicePixelRatio
-  const canvas = document.createElement('canvas')
-  canvas.style.position = 'absolute'
-  canvas.style.bottom = `${bottom}px`
-  canvas.style.left = '0'
+  const canvas = node
   const context = canvas.getContext('2d')
   
   let innerHeight
-  function setCanvasSize(swaps) {
+  function setCanvasSize(swaps, width) {
     innerHeight = (swaps.length - 1) * rowHeight
     canvas.width = width * dpi
     canvas.height = (innerHeight +  margin.top + margin.bottom) * dpi
@@ -60,7 +55,7 @@ export default ({width, x, domain, colorScale, duration, renderCircles}) => {
     context.stroke()
   }
 
-  function next(history) {
+  function next(history, width) {
     const record0 = history[time]
     const record1 = history[time + 1]
     if (!record0 || !record1) {
@@ -75,7 +70,8 @@ export default ({width, x, domain, colorScale, duration, renderCircles}) => {
       [width + strokeWidth, y(time1) + strokeWidth],
       [-strokeWidth, y(time1) + strokeWidth]
     ]
-    
+    canvas.style.marginBottom = `-${rowHeight}px`
+
     transition()
       .duration(duration)
       .on('start', function() {
@@ -94,16 +90,16 @@ export default ({width, x, domain, colorScale, duration, renderCircles}) => {
           record0.forEach((d, i) => {
             drawPath(d, i, record1.indexOf(d), time0, time1, t)
           })
-          canvas.style.bottom = `${bottom + rowHeight * t}px`
+          canvas.style.marginBottom = `-${rowHeight * (1 - t)}px`
         }
       })
       .on('end', function() {
         context.restore()
-        next(history)
+        next(history, width)
       })
   }
-  function render(history) {
-    setCanvasSize(history)
+  function render({ history, width }) {
+    setCanvasSize(history, width)
     for (let time0 = 0; time0 < time; time0++) {
       const record0 = history[time0]
       const record1 = history[time0 + 1]
@@ -114,9 +110,8 @@ export default ({width, x, domain, colorScale, duration, renderCircles}) => {
         drawPath(d, i, record1.indexOf(d), time0, time0 + 1, 1)
       })
     }
-    next(history)
+    next(history, width)
   }
-  render.node = canvas
   render.reset = reset
   
   return render
