@@ -1,4 +1,4 @@
-import babel from 'https://cdn.republik.space/s3/republik-assets/dynamic-components/talk-to-the-machine/babel.min.js' // /babel.min.js
+import babel from 'babel-standalone'
 
 const babelPlugin = ({ types: t }) => {
   const createStatement = () => t.awaitExpression(t.callExpression(t.identifier("__SECRET_CHECK_INPUT"), []))
