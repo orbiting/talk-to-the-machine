@@ -1,9 +1,9 @@
+import tf from '@tensorflow/tfjs'
 const MNIST_LABELS_PATH =
     'https://cdn.republik.space/s3/republik-assets/dynamic-components/talk-to-the-machine/neural-network/mnist_labels_uint8'
 const MNIST_IMAGES_SPRITE_PATH =
     'https://cdn.republik.space/s3/republik-assets/dynamic-components/talk-to-the-machine/neural-network/mnist_images.png'
 
-const LEARNING_RATE = 0.15
 const BATCH_SIZE = 64
 const TEST_BATCH_SIZE = 1000
 const TEST_ITERATION_FREQUENCY = 5
@@ -12,6 +12,7 @@ const NUM_CLASSES = 10
 const NUM_DATASET_ELEMENTS = 65000
 const NUM_TRAIN_ELEMENTS = 55000
 const NUM_TEST_ELEMENTS = NUM_DATASET_ELEMENTS - NUM_TRAIN_ELEMENTS
+const TRAIN_BATCHES = 100
 
 class MnistData {
   constructor() {
@@ -121,8 +122,68 @@ class MnistData {
   }
 }
 
-async function loadData() {
+export async function loadData() {
   const data = new MnistData()
   await data.load()
   return data
+}
+
+export async function train(model, data, { onBatchEnd, onFitEnd } = {}) {
+  const lossValues = []
+  const accuracyValues = []
+
+  for (let i = 0; i < TRAIN_BATCHES; i++) {
+    const batch = data.nextTrainBatch(BATCH_SIZE)
+
+    let testBatch
+    let validationData
+    // Every few batches test the accuracy of the mode.
+    if (i % TEST_ITERATION_FREQUENCY === 0) {
+      testBatch = data.nextTestBatch(TEST_BATCH_SIZE)
+      validationData = [
+        testBatch.xs.reshape([TEST_BATCH_SIZE, 28, 28, 1]), testBatch.labels
+      ]
+    }
+
+    // The entire dataset doesn't fit into memory so we call fit repeatedly
+    // with batches.
+    const history = await model.fit(
+      batch.xs.reshape([BATCH_SIZE, 28, 28, 1]), batch.labels,
+      {
+        batchSize: BATCH_SIZE,
+        validationData,
+        epochs: 1,
+        callbacks: {
+          onBatchEnd() {
+            onBatchEnd && onBatchEnd({model})
+          }
+        }
+      }
+    )
+
+    const loss = history.history.loss[0]
+    const accuracy = history.history.acc[0]
+
+    // Plot loss / accuracy.
+    lossValues.push({'batch': i, 'loss': loss, 'set': 'train'})
+
+    if (testBatch != null) {
+      accuracyValues.push({'batch': i, 'accuracy': accuracy, 'set': 'train'})
+    }
+
+    onFitEnd && onFitEnd({
+      model,
+      accuracy,
+      loss
+    })
+
+    batch.xs.dispose()
+    batch.labels.dispose()
+    if (testBatch != null) {
+      testBatch.xs.dispose()
+      testBatch.labels.dispose()
+    }
+
+    await tf.nextFrame()
+  }
 }

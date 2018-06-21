@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-21T15:11:35.297Z",
+  "updated": "2018-06-21T18:39:20.860Z",
   "title": "live",
   "data": [
     {
@@ -156,11 +156,15 @@
     },
     {
       "key": "nn/model/pretrained",
-      "value": "Dieses Modell wurde bereits trainiert und lediglich in Ihren Browser geladen."
+      "value": "Dieses Modell haben wir vortrainiert und lediglich in Ihren Browser geladen."
     },
     {
       "key": "nn/model/untrained",
       "value": "Dieses Modell wurde mit einer Prise Zufall in Ihrem Browser erstellt und ist noch nicht trainiert. Es hat etwa eine 10%-Chance, die richtige Ziffer zu erkennen – zufällig."
+    },
+    {
+      "key": "nn/model/untrained/data",
+      "value": "Laden Sie die Daten um es zu trainieren."
     },
     {
       "key": "nn/model/trained",
@@ -168,7 +172,7 @@
     },
     {
       "key": "nn/model/create/label",
-      "value": "Modell wechseln"
+      "value": "Modell bearbeiten"
     },
     {
       "key": "nn/model/create/new",

@@ -9,6 +9,14 @@ open http://localhost:3000/3
 
 This assumes you have an «Articles» dir two levels above, e.g. `~/Code/talk-to-the-machine` and `~/Articles/article-talk-to-the-machine-1`.
 
+### Text
+
+https://docs.google.com/spreadsheets/d/1FFbrwSf7hiRSwh9t4ORWIxN2SQRx-gUZkL62C-6wdGU/edit#gid=0
+
+```bash
+npm run translations
+```
+
 ### Deploy
 
 ```bash
