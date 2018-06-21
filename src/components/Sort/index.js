@@ -5,7 +5,10 @@ import {
   Label, Interaction,
   fontFamilies, Center
 } from '@project-r/styleguide'
-import AutosizeInput from 'react-textarea-autosize'
+
+import CodemirrorCSS from './CodemirrorCSS'
+import {Controlled as CodeMirror} from 'react-codemirror2'
+import 'codemirror/mode/javascript/javascript'
 
 import {
   scaleLinear, scaleSequential,
@@ -294,27 +297,29 @@ class Sort extends Component {
           <br />
           <label>
             <CodeLabel>{'function sort(input) {'}</CodeLabel>
-            <AutosizeInput {...styles.autoSize}
-              value={this.state.code}
-              onChange={e => {
-                const code = e.target.value
-
-                const nextState = {
-                  code
+            <CodemirrorCSS />
+            <CodeMirror options={{
+              mode: 'javascript',
+              lineNumbers: true,
+              theme: 'pastel-on-dark',
+              viewportMargin: Infinity
+            }} value={this.state.code} onBeforeChange={(editor, data, code) => {
+              const nextState = {
+                code
+              }
+              let run
+              try {
+                run = makeFn(code)
+              } catch (e) {
+                nextState.codeError = e.toString()
+              }
+              nextState.run = run
+              this.setState(nextState, () => {
+                if (this.state.autoRun) {
+                  this.runCode()
                 }
-                let run
-                try {
-                  run = makeFn(code)
-                } catch (e) {
-                  nextState.codeError = e.toString()
-                }
-                nextState.run = run
-                this.setState(nextState, () => {
-                  if (this.state.autoRun) {
-                    this.runCode()
-                  }
-                })
-              }} />
+              })
+            }} />
             <CodeLabel>{'}'}</CodeLabel>
             <br />
             <CodeLabel>
