@@ -14,8 +14,8 @@ const schema = createSchema()
 const mdast = parse(md)
 
 visit(mdast, 'zone', node => {
-  if (node.identifier === 'DYNAMIC_COMPONENT') {
-    node.data.src = node.data.src +
+  if (node.identifier === 'DYNAMIC_COMPONENT' && node.data.src.match(/part1\.js/)) {
+    node.data.src = '/build/part1.js' +
       '?u=' + encodeURIComponent(jsUrl)
   }
 })
