@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-21T12:25:57.204Z",
+  "updated": "2018-06-21T15:11:35.297Z",
   "title": "live",
   "data": [
     {
@@ -192,7 +192,7 @@
     },
     {
       "key": "nn/credits",
-      "value": "Datenquelle: <a href=\"http://yann.lecun.com/exdb/mnist/\">MNIST<a/>. Vielen Dank an <a href=\"https://twitter.com/tafsiri\">Yannick Assogba</a> und <a href=\"https://github.com/garamond\">Andreas Moor</a> für Ihre Unterstützung bei der Entwicklung dieser Visualisierung."
+      "value": "Datenquelle: <a href=\"http://yann.lecun.com/exdb/mnist/\">MNIST</a>. Vielen Dank an <a href=\"https://twitter.com/tafsiri\">Yannick Assogba</a> und <a href=\"https://github.com/garamond\">Andreas Moor</a> für Ihre Unterstützung bei der Entwicklung dieser Visualisierung."
     }
   ]
 }
