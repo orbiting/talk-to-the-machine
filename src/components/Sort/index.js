@@ -74,21 +74,34 @@ const makeFn = code => new Function(
   `${transformCode(code)}; return sort(input, test);`
 )
 
-const DEFAULT_CODE = `function swap(position1, position2) {
-  let tmp = input[position1]
-  input[position1] = input[position2]
-  input[position2] = tmp
+const DEFAULT_CODE = `
+function quicksort(left, right) {
+  if (left < right) {
+    let pivot = input[left + Math.floor((right - left) / 2)],
+        leftNew = left,
+        rightNew = right;
+
+    do {
+      while (input[leftNew] < pivot) {
+        leftNew++;
+      }
+      while (pivot < input[rightNew]) {
+        rightNew--;
+      }
+      if (leftNew <= rightNew) {
+        let temp = input[leftNew];
+        input[leftNew] = input[rightNew];
+        input[rightNew] = temp;
+        leftNew++;
+        rightNew--;
+      }
+    } while (leftNew <= rightNew);
+    quicksort(left, rightNew);
+    quicksort(leftNew, right);
+  }
 }
 
-let position = 0
-while (position < input.length) {
-  if (position == 0 || input[position] >= input[position - 1]) {
-    position = position + 1
-  } else {
-    swap(position, position - 1)
-    position = position - 1
-  }
-}`
+quicksort(0, input.length - 1)`
 
 class Sort extends Component {
   constructor (props, ...args) {
@@ -112,8 +125,8 @@ class Sort extends Component {
     this.state = {
       data: start,
       code: '// Ihr Code',
-      code: DEFAULT_CODE,
-      run: makeFn(DEFAULT_CODE),
+      // code: DEFAULT_CODE,
+      // run: makeFn(DEFAULT_CODE),
       autoRun: true,
       history: [start.slice()],
       svgHeight: 0

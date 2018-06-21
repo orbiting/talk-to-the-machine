@@ -6,7 +6,7 @@ import {
   drag
 } from 'd3'
 
-export const CIRCLE_PADDING = 50
+export const CIRCLE_PADDING = 30
  
 function endAll(transition, onEnd) {
   if (!onEnd) {
