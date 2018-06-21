@@ -138,7 +138,6 @@ export function createInput({ onDraw, onClear }) {
   canvas.width = size * dpi
   canvas.height = size * dpi
   canvas.style.width = size + 'px'
-  canvas.style.border = '1px solid black'
   context.scale(dpi, dpi)
   
   let paths = []

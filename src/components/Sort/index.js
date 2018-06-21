@@ -21,6 +21,8 @@ import { transformCode } from '../../lib/babel'
 
 import { t } from '../../lib/translate'
 
+import { ChartTitle, ChartLead } from '../ChartTypo'
+
 const monoFontStyle = {
   fontFamily: fontFamilies.monospaceRegular,
   fontSize: '14px',
@@ -240,8 +242,8 @@ class Sort extends Component {
     const { width, svgHeight } = this.state
     return <div>
       <Center>
-        <Interaction.H3>{t(`sort/phase/${phase}/title`)}</Interaction.H3>
-        <Interaction.P>{t(`sort/phase/${phase}/description`)}</Interaction.P>
+        <ChartTitle>{t(`sort/phase/${phase}/title`)}</ChartTitle>
+        <ChartLead>{t(`sort/phase/${phase}/description`)}</ChartLead>
         <div ref={this.setRef} style={{
           position: 'relative',
           paddingTop: 200,

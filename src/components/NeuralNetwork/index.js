@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+import { css } from 'glamor'
 
-import { Interaction, RawHtml, Label, Center, Breakout, A } from '@project-r/styleguide'
+import { Interaction, RawHtml, Label, Center, Breakout, A, colors, mediaQueries } from '@project-r/styleguide'
 
 import { t } from '../../lib/translate'
 
@@ -10,6 +11,24 @@ import { createInput, createResult } from './io'
 import { loadPretrained } from './model'
 
 import readTopology from './readTopology'
+
+import { ChartTitle, ChartLead } from '../ChartTypo'
+
+const styles = {
+  input: css({
+    '& canvas': {
+      marginTop: 3,
+      border: `1px solid ${colors.divider}`
+    }
+  }),
+  chart: css({
+    overflow: 'auto', 
+    maxWidth: 975,
+    [mediaQueries.mUp]: {
+      marginLeft: `calc(50% - ${725 / 2}px)`
+    }
+  })
+}
 
 class NeuralNetwork extends Component {
   constructor (props, ...args) {
@@ -96,35 +115,35 @@ class NeuralNetwork extends Component {
   }
   render () {
     return (
-      <Center>
-        <Interaction.H3>{t('nn/title')}</Interaction.H3>
-        <Interaction.P>{t('nn/description')}</Interaction.P>
-        <br />
+      <Fragment>
+        <Center>
+          <ChartTitle>{t('nn/title')}</ChartTitle>
+          <ChartLead>{t('nn/description')}</ChartLead>
+          <br />
 
-        <Label>{t('nn/draw')}</Label>
-        <div ref={this.setInputRef} />
-        <Label><A href='#' onClick={(e) => {
-          e.preventDefault()
-          this.input.clear()
-        }}>{t('nn/draw/clear')}</A></Label>
-        <br /><br />
+          <Label>{t('nn/draw')}</Label>
+          <div {...styles.input} ref={this.setInputRef} />
+          <Label><A href='#' onClick={(e) => {
+            e.preventDefault()
+            this.input.clear()
+          }}>{t('nn/draw/clear')}</A></Label>
+          <br /><br />
 
-        <Label>{t('nn/network')}</Label>
-        <Breakout size='breakout'>
-          <div style={{
-            overflow: 'auto'
-          }} ref={this.setRef}>
-            <canvas />
-          </div>
-        </Breakout>
-        <Label>{t('nn/legend')}</Label>
-        <br /><br />
-        <RawHtml
-          type={Label}
-          dangerouslySetInnerHTML={{
-            __html: t('nn/credits')
-          }} />
-      </Center>
+          <Label>{t('nn/network')}</Label>
+        </Center>
+        <div {...styles.chart} ref={this.setRef}>
+          <canvas />
+        </div>
+        <Center>
+          <Label>{t('nn/legend')}</Label>
+          <br /><br />
+          <RawHtml
+            type={Label}
+            dangerouslySetInnerHTML={{
+              __html: t('nn/credits')
+            }} />
+        </Center>
+      </Fragment>
     )
   }
 }
