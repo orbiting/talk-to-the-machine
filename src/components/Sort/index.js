@@ -96,9 +96,26 @@ const swapFnCode = `  function ${swapFnName}(position1, position2) {
     input[position2] = tmp
   }`
 
-const generateCode = (swap, phase) => ({ code: currentCode, genSwaps = [], complied }) => {
+const bubbleSort = `  for (let aussen = 0; aussen < input.length; aussen++) {
+    for (let innen = 1; innen < input.length; innen++) {
+      if (input[innen - 1] > input[innen]) {
+        ${swapFnName}(innen, innen - 1)
+      }
+    }
+  }`
+
+const genSwapCode = (swap) => [
+  `  if(input[${swap[0]}] > input[${swap[1]}]) {`,
+  `    ${swapFnName}(${swap[0]}, ${swap[1]})`,
+  `  }`
+].join('\n')
+
+const generateCode = (swap, phase) => ({ code: currentCode, genSolution, genSwaps = [], complied }) => {
   const upSwap = swap.sort(ascending)
   if (genSwaps.find(swap => swap.join() === upSwap.join())) {
+    return
+  }
+  if (genSolution) {
     return
   }
 
@@ -125,9 +142,23 @@ const generateCode = (swap, phase) => ({ code: currentCode, genSwaps = [], compl
     ].join('\n')
   }
 
-  code = `${code}\n  if(input[${upSwap[0]}] > input[${upSwap[1]}]) {
-    ${swapFnName}(${upSwap[0]}, ${upSwap[1]})
-  }`
+  // in the last example we'll add a bubble sort after 5 uniq swaps
+  if (genSwaps.length >= 5 && phase === '2') {
+    code = `${code}\n${bubbleSort}`
+
+    genSwaps.forEach(swap => {
+      code = code.replace(genSwapCode(swap), '')
+    })
+    // clear empty lines
+    code = code.replace(/(\s+\n){3,}/g, '\n\n\n')
+
+    return {
+      genSolution: true,
+      code
+    }
+  }
+  // otherwise add swap code
+  code = `${code}\n${genSwapCode(upSwap)}`
 
   return {
     genSwaps: [...genSwaps, upSwap],
