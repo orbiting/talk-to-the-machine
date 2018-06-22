@@ -228,9 +228,15 @@ class Sort extends Component {
         if (width !== this.state.width) {
           this.x.range([0, width]).round(true)
 
-          const size = Math.max(this.x.step(), 4)
-          const radius = Math.min(30, Math.max(size / 2 - 5, 2))
+          const size = Math.max(this.x.step(), 10)
+          const radius = Math.min(30, Math.max(size / 2 - 1, 2))
           const svgHeight = CIRCLE_PADDING * 2 + radius * 2
+          // console.log({
+          //   step: this.x.step(),
+          //   size,
+          //   radius,
+          //   n: this.props.answer.length
+          // })
 
           this.setState({width, radius, svgHeight})
         }

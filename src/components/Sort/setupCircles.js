@@ -84,6 +84,8 @@ export default ({node, x, domain, colorScale, onChange, duration}) => {
       .style('font-size', Math.min(16, radius))
       .text(radius > 5 ? d => d.label : undefined)
     
+    circles.select('circle').attr('r', radius)
+
     circles.transition()
       .duration(duration)
       .attr('transform', d => `translate(${[d.x, d.y]})`)
