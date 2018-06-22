@@ -14,7 +14,8 @@ import {
   scaleLinear, scaleSequential,
   scalePoint,
   interpolateCubehelix, interpolateRainbow,
-  hsl
+  hsl,
+  ascending
 } from 'd3'
 
 import setupCircles, { CIRCLE_PADDING } from './setupCircles'
@@ -74,11 +75,70 @@ const Ref = ({ children }) => <span {...styles.ref}>
   {children}
 </span>
 
-const makeFn = code => new Function(
-  'input',
-  CHECK_FN_NAME,
-  `${transformCode(code)}; return sort(input, ${CHECK_FN_NAME});`
-)
+const compileCode = code => {
+  const transformed = transformCode(code)
+  return {
+    ...transformed,
+    run: new Function(
+      'input',
+      CHECK_FN_NAME,
+      `${transformed.code}; return sort(input, ${CHECK_FN_NAME});`
+    )
+  }
+}
+
+const DEFAULT_CODE = '  /* Stärn-Släsch-Kommentar: Jetzt sind Sie dran, ihre Funktion: */\n  '
+
+const swapFnName = `tauschen`
+const swapFnCode = `  function ${swapFnName}(position1, position2) {
+    let tmp = input[position1]
+    input[position1] = input[position2]
+    input[position2] = tmp
+  }`
+
+const generateCode = (swap, phase) => ({ code: currentCode, genSwaps = [], complied }) => {
+  const upSwap = swap.sort(ascending)
+  if (genSwaps.find(swap => swap.join() === upSwap.join())) {
+    return
+  }
+
+  let addSwapFn = true
+  if (complied && complied.ast) {
+    if (complied.ast.tokens.find(t => t.value === swapFnName)) {
+      addSwapFn = false
+    }
+  } else {
+    if (currentCode.indexOf(swapFnCode) !== -1) {
+      addSwapFn = false
+    }
+  }
+
+  let code = currentCode === DEFAULT_CODE
+    ? ''
+    : currentCode
+  if (addSwapFn) {
+    code = `${swapFnCode}\n\n${code}`
+  }
+
+  code = `${code}\n  if(input[${upSwap[0]}] > input[${upSwap[1]}]) {
+    ${swapFnName}(${upSwap[0]}, ${upSwap[1]})
+  }`
+
+  return {
+    genSwaps: [...genSwaps, upSwap],
+    code
+  }
+}
+
+const normalizeData = (data, answer) => {
+  const normalData = data
+    .map(d => +d)
+    .filter(d => answer.indexOf(d) !== -1)
+
+  return normalData.concat(
+    answer.filter(d => normalData.indexOf(d) === -1)
+  )
+}
 
 const deepEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 
@@ -86,6 +146,7 @@ const CodeExample = ({ opacity = 0.8, options, value }) => (
   <div style={{opacity}}>
     <CodeMirror options={{
       mode: 'javascript',
+      lineWrapping: true,
       theme: 'pastel-on-dark',
       viewportMargin: Infinity,
       readOnly: 'nocursor',
@@ -115,12 +176,11 @@ class Sort extends Component {
     const start = randomWrong(props.answer)
     this.state = {
       data: start,
-      code: '  /* Stärn-Släsch-Kommentar: Jetzt sind Sie dran, ihre Funktion: */\n  ',
-      // code: DEFAULT_CODE,
-      // run: makeFn(DEFAULT_CODE),
+      code: DEFAULT_CODE,
       autoRun: true,
       history: [start.slice()],
-      svgHeight: 0
+      svgHeight: 0,
+      prestine: true
     }
     this.setRef = ref => {
       this.ref = ref
@@ -152,14 +212,19 @@ class Sort extends Component {
       return true
     }
     this.update = async (d) => {
-      if (!d || d.some((item, index, all) => all.indexOf(item) !== index)) {
+      if (
+        !d ||
+        d.some((item, index, all) => all.indexOf(item) !== index) ||
+        d.some(item => item === undefined)
+      ) {
         // intermediate state with duplicates
         return
       }
-      if (this.record(d)) {
+      const data = normalizeData(d, this.props.answer)
+      if (this.record(data)) {
         return new Promise((resolve) => {
           this.circles({
-            data: this.state.data,
+            data,
             radius: this.state.radius,
             onEnd: () => {
               resolve()
@@ -175,14 +240,18 @@ class Sort extends Component {
 
   }
   runCode () {
-    if (!this.state.run) {
+    if (!this.state.complied) {
       return
     }
-    this.state.run(this.state.data, () => {
+    const { answer } = this.props
+    this.state.complied.run(this.state.data, () => {
       return this.update(this.state.data)
     }).then(returnValue => {
-      this.update(returnValue || this.state.data).then(() => {
-        this.setState({data: returnValue || this.state.data})
+      const result = returnValue || this.state.data
+      this.update(result).then(() => {
+        this.setState({
+          data: normalizeData(result, answer)
+        })
       })
     })
     .catch((e) => {
@@ -197,9 +266,33 @@ class Sort extends Component {
     const { x, colorScale } = this
     const { width } = this.state
     const { answer } = this.props
-    const onChange = data => {
-      this.record(data)
+    const onChange = (data, subject) => {
+      // console.log('onChange', data.join(' '), 'subject', subject)
+      const hasChanged = this.record(data)
       this.setState({data})
+      if (hasChanged) {
+        const isSolved = deepEqual(
+          data, this.props.answer
+        )
+        if (isSolved) {
+          return
+        }
+
+        const { history } = this.state
+        const prev = history[history.length - 2]
+        // all swaps are to unorganic
+        // const swaps = data
+        //   .map((d, i) => [i, prev.indexOf(d)])
+        //   .filter(([i0, i1]) => i0 !== i1)
+
+        const swap = [
+          data.indexOf(subject),
+          prev.indexOf(subject)
+        ]
+        if (this.state.prestine) {
+          this.setState(generateCode(swap, this.props.phase))
+        }
+      }
     }
     this.canvas = setupCanvas({
       node: this.ref.firstChild,
@@ -304,7 +397,12 @@ class Sort extends Component {
               start,
               data: start,
               history: [start.slice()],
-              autoRun: true
+              genSwaps: undefined,
+              autoRun: true,
+              ...(this.state.dirty ? {} : {
+                code: DEFAULT_CODE,
+                complied: undefined
+              })
             })
             this.canvas.reset()
           }}>{t('sort/controls/reset')}</a>
@@ -316,18 +414,21 @@ class Sort extends Component {
             }} />
             <CodeMirror options={{
               mode: 'javascript',
+              lineWrapping: true,
               lineNumbers: true,
               firstLineNumber: 2,
               theme: 'pastel-on-dark',
               viewportMargin: Infinity
             }} value={this.state.code} onBeforeChange={(editor, data, code) => {
               const nextState = {
+                dirty: true,
                 code,
                 codeError: null
               }
-              let run
+
+              let complied
               try {
-                run = makeFn(code)
+                complied = compileCode(code)
               } catch (e) {
                 nextState.codeError = e.toString()
                   .replace(
@@ -336,7 +437,7 @@ class Sort extends Component {
                   )
                   .replace('\n  1 | async ', '\n  1 | ')
               }
-              nextState.run = run
+              nextState.complied = complied
               this.setState(nextState, () => {
                 if (this.state.autoRun) {
                   this.runCode()

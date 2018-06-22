@@ -54,12 +54,15 @@ export default ({node, x, domain, colorScale, onChange, duration}) => {
     }
   
     function dragended() {
-      select(this).select('circle').attr('stroke', 'none')
+      const subject = select(this)
+      subject.select('circle').attr('stroke', 'none')
 
-      onChange(circleData
-        .slice()
-        .sort((a, b) => ascending(a.x, b.x))
-        .map(d => d.label)
+      onChange(
+        circleData
+          .slice()
+          .sort((a, b) => ascending(a.x, b.x))
+          .map(d => d.label),
+        subject.datum().label
       )
     }
   

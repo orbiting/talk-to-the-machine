@@ -43,6 +43,11 @@ const babelPlugin = ({ types: t }) => {
 }
 
 export const transformCode = code => {
-  const extendedCode = babel.transform(`async function sort(input, ${CHECK_FN_NAME}) {\n${code.split('\n').map(line => `  ${line}`).join('\n')}\n}`, {plugins: [babelPlugin]}).code
-  return babel.transform(extendedCode, {presets: ['es2015']}).code
+  const extended = babel.transform(`async function sort(input, ${CHECK_FN_NAME}) {\n${code.split('\n').map(line => `  ${line}`).join('\n')}\n}`, {plugins: [babelPlugin]})
+  // window.babel = babel
+  // window.ast = extended.ast
+  return {
+    ast: extended.ast,
+    code: babel.transform(extended.code, {presets: ['es2015']}).code
+  }
 }
