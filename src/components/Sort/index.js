@@ -137,8 +137,7 @@ class Sort extends Component {
       code: DEFAULT_CODE,
       autoRun: true,
       history: [start.slice()],
-      svgHeight: 0,
-      prestine: true
+      svgHeight: 0
     }
     this.setRef = ref => {
       this.ref = ref
@@ -208,7 +207,31 @@ class Sort extends Component {
         })
       }
     }
+  }
+  compileCode (code, dirty = true) {
+    const nextState = {
+      dirty,
+      code,
+      codeError: null
+    }
 
+    let complied
+    try {
+      complied = compileCode(code)
+    } catch (e) {
+      nextState.codeError = e.toString()
+        .replace(
+          `, ${CHECK_FN_NAME}`,
+          ''
+        )
+        .replace('\n  1 | async ', '\n  1 | ')
+    }
+    nextState.complied = complied
+    this.setState(nextState, () => {
+      if (this.state.autoRun) {
+        this.runCode()
+      }
+    })
   }
   runCode () {
     if (!this.state.complied) {
@@ -260,9 +283,12 @@ class Sort extends Component {
           data.indexOf(subject),
           prev.indexOf(subject)
         ]
-        if (this.state.prestine) {
-          this.setState(generateCode(swap, this.props.phase))
-        }
+        const hadGenSolution = this.state.genSolution
+        this.setState(generateCode(swap, this.props.phase), () => {
+          if (this.state.genSolution && !hadGenSolution) {
+            this.compileCode(this.state.code, false)
+          }
+        })
       }
     }
     this.canvas = setupCanvas({
@@ -390,29 +416,7 @@ class Sort extends Component {
               theme: 'pastel-on-dark',
               viewportMargin: Infinity
             }} value={this.state.code} onBeforeChange={(editor, data, code) => {
-              const nextState = {
-                dirty: true,
-                code,
-                codeError: null
-              }
-
-              let complied
-              try {
-                complied = compileCode(code)
-              } catch (e) {
-                nextState.codeError = e.toString()
-                  .replace(
-                    `, ${CHECK_FN_NAME}`,
-                    ''
-                  )
-                  .replace('\n  1 | async ', '\n  1 | ')
-              }
-              nextState.complied = complied
-              this.setState(nextState, () => {
-                if (this.state.autoRun) {
-                  this.runCode()
-                }
-              })
+              this.compileCode(code)
             }} />
             <CodeExample value={`}`} options={{
               firstLineNumber: this.state.code.split('\n').length + 2,
