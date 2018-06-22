@@ -1,7 +1,9 @@
 import babel from 'babel-standalone'
 
+export const CHECK_FN_NAME = '__CHECK_INPUT'
+
 const babelPlugin = ({ types: t }) => {
-  const createStatement = () => t.awaitExpression(t.callExpression(t.identifier("__SECRET_CHECK_INPUT"), []))
+  const createStatement = () => t.awaitExpression(t.callExpression(t.identifier(CHECK_FN_NAME), []))
 
   return {
     visitor: {
@@ -41,6 +43,6 @@ const babelPlugin = ({ types: t }) => {
 }
 
 export const transformCode = code => {
-  const extendedCode = babel.transform(`async function sort(input, __SECRET_CHECK_INPUT) {\n${code}\n}`, {plugins: [babelPlugin]}).code
+  const extendedCode = babel.transform(`async function sort(input, ${CHECK_FN_NAME}) {\n${code.split('\n').map(line => `  ${line}`).join('\n')}\n}`, {plugins: [babelPlugin]}).code
   return babel.transform(extendedCode, {presets: ['es2015']}).code
 }

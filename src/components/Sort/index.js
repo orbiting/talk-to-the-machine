@@ -20,7 +20,7 @@ import {
 import setupCircles, { CIRCLE_PADDING } from './setupCircles'
 import setupCanvas from './setupCanvas'
 import randomWrong from '../../lib/randomWrong'
-import { transformCode } from '../../lib/babel'
+import { transformCode, CHECK_FN_NAME } from '../../lib/babel'
 
 import { t } from '../../lib/translate'
 
@@ -201,6 +201,9 @@ class Sort extends Component {
         this.setState({data: returnValue || this.state.data})
       })
     })
+    .catch((e) => {
+      this.setState({codeError: e.toString()})
+    })
   }
   componentDidMount () {
     window.addEventListener('resize', this.measure)
@@ -329,18 +332,25 @@ class Sort extends Component {
             <CodeMirror options={{
               mode: 'javascript',
               lineNumbers: true,
+              firstLineNumber: 2,
               theme: 'pastel-on-dark',
               viewportMargin: Infinity
               // readOnly: true
             }} value={this.state.code} onBeforeChange={(editor, data, code) => {
               const nextState = {
-                code
+                code,
+                codeError: null
               }
               let run
               try {
                 run = makeFn(code)
               } catch (e) {
                 nextState.codeError = e.toString()
+                  .replace(
+                    `, ${CHECK_FN_NAME}`,
+                    ''
+                  )
+                  .replace('\n  1 | async ', '\n  1 | ')
               }
               nextState.run = run
               this.setState(nextState, () => {
@@ -351,6 +361,9 @@ class Sort extends Component {
             }} />
             <CodeLabel>{'}'}</CodeLabel>
           </label>
+          {!!this.state.codeError && <pre>
+            {this.state.codeError}
+          </pre>}
           <br />
           <CodeLabel>
             {t('sort/101/title')}<br /><br />
