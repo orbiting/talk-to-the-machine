@@ -79,6 +79,8 @@ const makeFn = code => new Function(
   `${transformCode(code)}; return sort(input, test);`
 )
 
+const deepEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
+
 const DEFAULT_CODE = `
 function quicksort(left, right) {
   if (left < right) {
@@ -129,7 +131,7 @@ class Sort extends Component {
     const start = randomWrong(props.answer)
     this.state = {
       data: start,
-      code: '// Ihr Code',
+      code: '/* Kommentar: Jetzt Sie, ihre Funktion: */\n',
       // code: DEFAULT_CODE,
       // run: makeFn(DEFAULT_CODE),
       autoRun: true,
@@ -159,7 +161,7 @@ class Sort extends Component {
     this.record = (nextData) => {
       const { history } = this.state
       const previous = history[history.length - 1]
-      if (JSON.stringify(previous) === JSON.stringify(nextData)) {
+      if (deepEqual(previous, nextData)) {
         return
       }
       history.push(nextData.slice())
@@ -241,8 +243,13 @@ class Sort extends Component {
     window.removeEventListener('resize', this.measure)
   }
   render () {
-    const { phase } = this.props
-    const { width, svgHeight } = this.state
+    const { phase, answer } = this.props
+    const { width, svgHeight, data, showWrong } = this.state
+
+    const isSolved = deepEqual(
+      data, answer
+    )
+
     return <div>
       <Center>
         <ChartTitle>{t(`sort/phase/${phase}/title`)}</ChartTitle>
@@ -264,6 +271,27 @@ class Sort extends Component {
         <br />
         <br />
       </Center>
+      <div onClick={!isSolved ? (() => {
+        this.setState({showWrong: !showWrong})
+      }) : undefined} style={{
+        backgroundColor: isSolved ? '#64966E' : '#E9A733',
+        color: 'black',
+        cursor: 'pointer'
+      }}>
+        <Center style={{
+          padding: !isSolved && !showWrong
+            ? 3 : undefined
+        }}>
+          <Interaction.P>
+            {isSolved
+              ? t('sort/result/correct/generic')
+              : !!showWrong && t('sort/result/wrong', {
+                answer: answer.join(', '),
+                current: data.join(', ')
+              })}
+          </Interaction.P>
+        </Center>
+      </div>
       <div {...styles.codeArea}>
         <Center>
           <span {...styles.label}>{t('sort/controls/label')}{' '}</span>
@@ -329,15 +357,13 @@ class Sort extends Component {
             {t('sort/101/swap')}<br />
             <CodeMirror options={{
               mode: 'javascript',
-              lineNumbers: true,
               theme: 'pastel-on-dark',
               viewportMargin: Infinity,
               readOnly: true
-            }} value={`let tmp = input[0]\ninput[0] = input[1]\ninput[1] = tmp`} />
+            }} value={`let tmp = input[0] /* Ein Zwischenspeicher */\ninput[0] = input[1]\ninput[1] = tmp`} />
             {t('sort/101/if')}<br />
             <CodeMirror options={{
               mode: 'javascript',
-              lineNumbers: true,
               theme: 'pastel-on-dark',
               viewportMargin: Infinity,
               readOnly: true
@@ -345,7 +371,6 @@ class Sort extends Component {
             {t('sort/101/for')}<br />
             <CodeMirror options={{
               mode: 'javascript',
-              lineNumbers: true,
               theme: 'pastel-on-dark',
               viewportMargin: Infinity,
               readOnly: true
