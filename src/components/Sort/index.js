@@ -75,40 +75,23 @@ const Ref = ({ children }) => <span {...styles.ref}>
 
 const makeFn = code => new Function(
   'input',
-  'test',
-  `${transformCode(code)}; return sort(input, test);`
+  CHECK_FN_NAME,
+  `${transformCode(code)}; return sort(input, ${CHECK_FN_NAME});`
 )
 
 const deepEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 
-const DEFAULT_CODE = `
-function quicksort(left, right) {
-  if (left < right) {
-    let pivot = input[left + Math.floor((right - left) / 2)],
-        leftNew = left,
-        rightNew = right;
-
-    do {
-      while (input[leftNew] < pivot) {
-        leftNew++;
-      }
-      while (pivot < input[rightNew]) {
-        rightNew--;
-      }
-      if (leftNew <= rightNew) {
-        let temp = input[leftNew];
-        input[leftNew] = input[rightNew];
-        input[rightNew] = temp;
-        leftNew++;
-        rightNew--;
-      }
-    } while (leftNew <= rightNew);
-    quicksort(left, rightNew);
-    quicksort(leftNew, right);
-  }
-}
-
-quicksort(0, input.length - 1)`
+const CodeExample = ({ opacity = 0.8, options, value }) => (
+  <div style={{opacity}}>
+    <CodeMirror options={{
+      mode: 'javascript',
+      theme: 'pastel-on-dark',
+      viewportMargin: Infinity,
+      readOnly: 'nocursor',
+      ...options
+    }} value={value} />
+  </div>
+)
 
 class Sort extends Component {
   constructor (props, ...args) {
@@ -131,7 +114,7 @@ class Sort extends Component {
     const start = randomWrong(props.answer)
     this.state = {
       data: start,
-      code: '/* Kommentar: Jetzt Sie, ihre Funktion: */\n',
+      code: '  /* Stärn-Släsch-Kommentar: Jetzt Sie dran, ihre Funktion: */\n  ',
       // code: DEFAULT_CODE,
       // run: makeFn(DEFAULT_CODE),
       autoRun: true,
@@ -327,15 +310,15 @@ class Sort extends Component {
           <br />
           <br />
           <label>
-            <CodeLabel>{'function sort(input) {'}</CodeLabel>
             <CodemirrorCSS />
+            <CodeExample value={`function sort(input) {`} options={{lineNumbers: true
+            }} />
             <CodeMirror options={{
               mode: 'javascript',
               lineNumbers: true,
               firstLineNumber: 2,
               theme: 'pastel-on-dark',
               viewportMargin: Infinity
-              // readOnly: true
             }} value={this.state.code} onBeforeChange={(editor, data, code) => {
               const nextState = {
                 code,
@@ -359,7 +342,10 @@ class Sort extends Component {
                 }
               })
             }} />
-            <CodeLabel>{'}'}</CodeLabel>
+            <CodeExample value={`}`} options={{
+              firstLineNumber: this.state.code.split('\n').length + 2,
+              lineNumbers: true
+            }} />
           </label>
           {!!this.state.codeError && <pre>
             {this.state.codeError}
@@ -368,26 +354,11 @@ class Sort extends Component {
           <CodeLabel>
             {t('sort/101/title')}<br /><br />
             {t('sort/101/swap')}<br />
-            <CodeMirror options={{
-              mode: 'javascript',
-              theme: 'pastel-on-dark',
-              viewportMargin: Infinity,
-              readOnly: true
-            }} value={`let tmp = input[0] /* Ein Zwischenspeicher */\ninput[0] = input[1]\ninput[1] = tmp`} />
+            <CodeExample value={`let tmp = input[0] /* Ein Zwischenspeicher */\ninput[0] = input[1]\ninput[1] = tmp`} />
             {t('sort/101/if')}<br />
-            <CodeMirror options={{
-              mode: 'javascript',
-              theme: 'pastel-on-dark',
-              viewportMargin: Infinity,
-              readOnly: true
-            }} value={`if (input[0] < input[1]) { /* ${t('sort/101/if/true')} */ }\nelse { /* ${t('sort/101/if/false')} */ }`} />
+            <CodeExample value={`if (input[0] < input[1]) { /* ${t('sort/101/if/true')} */ }\nelse { /* ${t('sort/101/if/false')} */ }`} />
             {t('sort/101/for')}<br />
-            <CodeMirror options={{
-              mode: 'javascript',
-              theme: 'pastel-on-dark',
-              viewportMargin: Infinity,
-              readOnly: true
-            }} value={`for (let i = 0; i < input.length; i++) {\n  if (input[i] < input[i + 1]) { /* ${t('sort/101/for/inside')} */ }\n}`} />
+            <CodeExample value={`for (let i = 0; i < input.length; i++) {\n  if (input[i] < input[i + 1]) { /* ${t('sort/101/for/inside')} */ }\n}`} />
           </CodeLabel>
           <br />
           <CodeLabel>{t.elements(`sort/phase/${phase}/protip`, {
