@@ -137,7 +137,7 @@ const generateCode = (swap, phase) => ({ code: currentCode, genSolution, genSwap
   if (addSwapFn) {
     code = [
       swapFnCode,
-      isDefaultCode ? '\n  /* Ihr Code: */\n' : '',
+      isDefaultCode ? '\n  /* Coden Sie hier: */\n' : '',
       code
     ].join('\n')
   }
@@ -262,19 +262,26 @@ class Sort extends Component {
         // intermediate state with duplicates
         return
       }
-      const data = normalizeData(d, this.props.answer)
+      const { answer } = this.props
+      const data = normalizeData(d, answer)
       if (this.record(data)) {
         return new Promise((resolve) => {
+          const duration = answer.length > 9
+            ? answer.length > 19
+              ? 50 : 200
+            : 400
           this.circles({
             data,
             radius: this.state.radius,
+            duration,
             onEnd: () => {
               resolve()
             }
           })
           this.canvas({
             width: this.state.width,
-            history: this.state.history
+            history: this.state.history,
+            duration
           })
         })
       }
@@ -304,10 +311,10 @@ class Sort extends Component {
     window.addEventListener('resize', this.measure)
     this.measure()
 
-    const duration = 400
     const { x, colorScale } = this
     const { width } = this.state
     const { answer } = this.props
+
     const onChange = (data, subject) => {
       // console.log('onChange', data.join(' '), 'subject', subject)
       const hasChanged = this.record(data)
@@ -338,14 +345,13 @@ class Sort extends Component {
     }
     this.canvas = setupCanvas({
       node: this.ref.firstChild,
-      x, domain: answer, colorScale, duration
+      x, domain: answer, colorScale
     })
     this.circles = setupCircles({
       node: this.ref.childNodes[1],
       x,
       domain: answer,
       colorScale,
-      duration,
       onChange
     })
   }
@@ -378,7 +384,7 @@ class Sort extends Component {
         <ChartLead>{t(`sort/phase/${phase}/description`)}</ChartLead>
         <div ref={this.setRef} style={{
           position: 'relative',
-          paddingTop: 200,
+          paddingTop: 170,
           overflow: 'hidden'
         }}>
           <canvas style={{

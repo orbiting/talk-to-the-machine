@@ -1,6 +1,6 @@
 import { scaleLinear, transition } from 'd3'
 
-export default ({node, x, domain, colorScale, duration}) => {
+export default ({node, x, domain, colorScale}) => {
   const margin = {top: 20, right: 0, bottom: 10, left: 0}
   const rowHeight = 20
   const strokeWidth = 6
@@ -55,7 +55,7 @@ export default ({node, x, domain, colorScale, duration}) => {
     context.stroke()
   }
 
-  function next(history, width) {
+  function next(history, width, duration) {
     const record0 = history[time]
     const record1 = history[time + 1]
     if (!record0 || !record1) {
@@ -95,10 +95,10 @@ export default ({node, x, domain, colorScale, duration}) => {
       })
       .on('end', function() {
         context.restore()
-        next(history, width)
+        next(history, width, duration)
       })
   }
-  function render({ history, width }) {
+  function render({ history, width, duration = 400 }) {
     setCanvasSize(history, width)
     for (let time0 = 0; time0 < time; time0++) {
       const record0 = history[time0]
@@ -110,7 +110,7 @@ export default ({node, x, domain, colorScale, duration}) => {
         drawPath(d, i, record1.indexOf(d), time0, time0 + 1, 1)
       })
     }
-    next(history, width)
+    next(history, width, duration)
   }
   render.reset = reset
   

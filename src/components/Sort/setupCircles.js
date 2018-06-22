@@ -26,10 +26,10 @@ function textColor(bgColor) {
   return yiq >= 128 ? 'black' : 'white'
 }
 
-export default ({node, x, domain, colorScale, onChange, duration}) => {
+export default ({node, x, domain, colorScale, onChange}) => {
   let circleData = []
   
-  const render = ({data, radius, onEnd}) => {
+  const render = ({data, radius, duration = 400, onEnd}) => {
     const svg = select(node)
     
     circleData = data.map((label, i) => {
