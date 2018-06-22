@@ -25,6 +25,7 @@ import { transformCode, CHECK_FN_NAME } from '../../lib/babel'
 import { t } from '../../lib/translate'
 
 import { ChartTitle, ChartLead } from '../ChartTypo'
+import CodeError from './CodeError'
 
 const monoFontStyle = {
   fontFamily: fontFamilies.monospaceRegular,
@@ -114,7 +115,7 @@ class Sort extends Component {
     const start = randomWrong(props.answer)
     this.state = {
       data: start,
-      code: '  /* Stärn-Släsch-Kommentar: Jetzt Sie dran, ihre Funktion: */\n  ',
+      code: '  /* Stärn-Släsch-Kommentar: Jetzt sind Sie dran, ihre Funktion: */\n  ',
       // code: DEFAULT_CODE,
       // run: makeFn(DEFAULT_CODE),
       autoRun: true,
@@ -347,9 +348,7 @@ class Sort extends Component {
               lineNumbers: true
             }} />
           </label>
-          {!!this.state.codeError && <pre>
-            {this.state.codeError}
-          </pre>}
+          <CodeError message={this.state.codeError} />
           <br />
           <CodeLabel>
             {t('sort/101/title')}<br /><br />
