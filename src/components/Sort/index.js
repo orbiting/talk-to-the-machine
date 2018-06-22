@@ -87,7 +87,7 @@ const compileCode = code => {
   }
 }
 
-const DEFAULT_CODE = '  /* Stärn-Släsch-Kommentar: Jetzt sind Sie dran, ihre Funktion: */\n  '
+const DEFAULT_CODE = '  /* Stärn-Släsch-Kommentar: Jetzt sind Sie dran, Ihre Funktion: */\n  '
 
 const swapFnName = `tauschen`
 const swapFnCode = `  function ${swapFnName}(position1, position2) {
@@ -113,11 +113,16 @@ const generateCode = (swap, phase) => ({ code: currentCode, genSwaps = [], compl
     }
   }
 
-  let code = currentCode === DEFAULT_CODE
+  const isDefaultCode = currentCode === DEFAULT_CODE
+  let code = isDefaultCode
     ? ''
     : currentCode
   if (addSwapFn) {
-    code = `${swapFnCode}\n\n${code}`
+    code = [
+      swapFnCode,
+      isDefaultCode ? '\n  /* Ihr Code: */\n' : '',
+      code
+    ].join('\n')
   }
 
   code = `${code}\n  if(input[${upSwap[0]}] > input[${upSwap[1]}]) {
