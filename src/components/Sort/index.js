@@ -130,7 +130,7 @@ class Sort extends Component {
 
     this.x = scalePoint()
       .domain(answer.map((d, i) => i))
-      .padding(2)
+      .padding(1)
 
     const start = randomWrong(props.answer)
     this.state = {
