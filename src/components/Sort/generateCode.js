@@ -2,7 +2,10 @@ import {
   ascending
 } from 'd3'
 
-export const DEFAULT_CODE = '  /* Stärn-Släsch-Kommentar: Jetzt sind Sie dran, Ihre Funktion: */\n  '
+import { t } from '../../lib/translate'
+
+const PLACEHOLDER_YOUR_CODE = `/* ${t('sort/placeholder')} */`
+export const DEFAULT_CODE = `  ${PLACEHOLDER_YOUR_CODE}\n  `
 
 const swapFnName = `tauschen`
 const swapFnCode = `  function ${swapFnName}(position1, position2) {
@@ -52,7 +55,7 @@ export const generateCode = (swap, phase) => ({ code: currentCode, genSolution, 
   if (addSwapFn) {
     code = [
       swapFnCode,
-      isDefaultCode ? '\n  /* Coden Sie hier: */\n' : '',
+      isDefaultCode ? `\n  ${PLACEHOLDER_YOUR_CODE}\n` : '',
       code
     ].join('\n')
   }
@@ -64,6 +67,7 @@ export const generateCode = (swap, phase) => ({ code: currentCode, genSolution, 
     genSwaps.forEach(swap => {
       code = code.replace(genSwapCode(swap), '')
     })
+    code = code.replace(PLACEHOLDER_YOUR_CODE, '')
     // clear empty lines
     code = code.replace(/(\s+\n){3,}/g, '\n\n\n')
 

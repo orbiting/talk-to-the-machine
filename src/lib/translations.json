@@ -1,14 +1,26 @@
 {
-  "updated": "2018-06-23T08:13:34.026Z",
+  "updated": "2018-06-23T21:47:31.162Z",
   "title": "live",
   "data": [
     {
-      "key": "sort/101/title",
+      "key": "sort/placeholder",
+      "value": "Stärn-Släsch-Kommentar – jetzt sind Sie dran, Ihr Code:"
+    },
+    {
+      "key": "sort/101/title/closed",
+      "value": "Programmieren 1x1?"
+    },
+    {
+      "key": "sort/101/title/open",
       "value": "Programmieren 1x1:"
     },
     {
       "key": "sort/101/swap",
       "value": "Erste Zahl mit zweiter tauschen"
+    },
+    {
+      "key": "sort/101/swap/tmp",
+      "value": "Ein Zwischenspeicher"
     },
     {
       "key": "sort/101/if",
@@ -29,6 +41,14 @@
     {
       "key": "sort/101/for/inside",
       "value": "Code hier!"
+    },
+    {
+      "key": "sort/101/for/nested",
+      "value": "Jedes mit jedem vergleiches? Verschachteln!"
+    },
+    {
+      "key": "sort/101/for/nested/inside",
+      "value": "Action!"
     },
     {
       "key": "sort/result/correct/generic",
@@ -128,7 +148,7 @@
     },
     {
       "key": "sort/compare/credits",
-      "value": "Die Visualisierungen basieren auf Beispielen von <a href=\"https://bl.ocks.org/mbostock/6dcc9a177065881b1bc4\">Mike Bostock</a> und <a href=\"https://beta.observablehq.com/@tmcw/sorting-overview\">Tom MacWright</a>. Vielen Dank für Ihre Arbeit!"
+      "value": "Die Visualisierungen basieren auf Beispielen von <a href=\"https://bl.ocks.org/mbostock/6dcc9a177065881b1bc4\">Mike Bostock</a> und <a href=\"https://beta.observablehq.com/@tmcw/sorting-overview\">Tom MacWright</a>. Ohne Ihnen wären diese interaktiven Visualisierungen nicht möglich gewesen. Vielen Dank!"
     },
     {
       "key": "nn/title",

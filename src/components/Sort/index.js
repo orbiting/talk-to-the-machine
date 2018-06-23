@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { css } from 'glamor'
 import {
   Button, Field, Checkbox,
@@ -60,6 +60,7 @@ const styles = {
     color: '#fff'
   }),
   action: css({
+    textDecoration: 'none',
     color: '#fff',
     cursor: 'pointer',
     ':hover': {
@@ -133,6 +134,7 @@ class Sort extends Component {
 
     const start = randomWrong(props.answer)
     this.state = {
+      one0one: props.phase === '1',
       data: start,
       code: DEFAULT_CODE,
       autoRun: true,
@@ -320,7 +322,7 @@ class Sort extends Component {
   }
   render () {
     const { phase, answer } = this.props
-    const { width, svgHeight, data, showWrong } = this.state
+    const { width, svgHeight, data, showWrong, one0one } = this.state
 
     const isSolved = deepEqual(
       data, answer
@@ -427,13 +429,28 @@ class Sort extends Component {
           <CodeError message={this.state.codeError} />
           <br />
           <CodeLabel>
-            {t('sort/101/title')}<br /><br />
-            {t('sort/101/swap')}<br />
-            <CodeExample value={`let tmp = input[0] /* Ein Zwischenspeicher */\ninput[0] = input[1]\ninput[1] = tmp`} />
-            {t('sort/101/if')}<br />
-            <CodeExample value={`if (input[0] < input[1]) { /* ${t('sort/101/if/true')} */ }\nelse { /* ${t('sort/101/if/false')} */ }`} />
-            {t('sort/101/for')}<br />
-            <CodeExample value={`for (let i = 0; i < input.length; i++) {\n  if (input[i] < input[i + 1]) { /* ${t('sort/101/for/inside')} */ }\n}`} />
+            <a href='#' {...styles.action} onClick={e => {
+              e.preventDefault()
+              this.setState({one0one: !one0one})
+            }}>
+              {t(`sort/101/title/${one0one ? 'open' : 'closed'}`)}
+            </a><br />
+            {!!one0one && <Fragment>
+              {t('sort/101/swap')}<br />
+              <CodeExample value={`let tmp = input[0] /* ${t('sort/101/swap/tmp')} */\ninput[0] = input[1]\ninput[1] = tmp`} />
+              {t('sort/101/if')}<br />
+              <CodeExample value={`if (input[0] < input[1]) { /* ${t('sort/101/if/true')} */ }\nelse { /* ${t('sort/101/if/false')} */ }`} />
+              {t('sort/101/for')}<br />
+              <CodeExample value={`for (let index = 0; index < input.length; index++) {\n  if (input[index] < input[index + 1]) { /* ${t('sort/101/for/inside')} */ }\n}`} />
+              {t('sort/101/for/nested')}<br />
+              <CodeExample value={[
+                `for (let aussen = 0; aussen < input.length; aussen++) {`,
+                `  for (let innen = 0; innen < input.length; innen++) {`,
+                `    if (input[innen] < input[innen + 1]) { /* ${t('sort/101/for/nested/inside')} */ }`,
+                `  }`,
+                `}`
+              ].join('\n')} />
+            </Fragment>}
           </CodeLabel>
           <br />
           <CodeLabel>{t.elements(`sort/phase/${phase}/protip`, {
