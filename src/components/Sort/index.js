@@ -394,6 +394,7 @@ class Sort extends Component {
               data: start,
               history: [start.slice()],
               genSwaps: undefined,
+              genSolution: undefined,
               autoRun: true,
               ...(this.state.dirty ? {} : {
                 code: DEFAULT_CODE,
