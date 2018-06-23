@@ -5,11 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "cd test && node server.js & rollup -c -w",
-    "build": "rollup -c",
+    "build": "rollup -c && cp -R src/components/Sort/assets build/sort && cp -R src/components/NeuralNetwork/assets build/neural-network",
     "translations": "gsheets --key=1FFbrwSf7hiRSwh9t4ORWIxN2SQRx-gUZkL62C-6wdGU --title=live --pretty --out src/lib/translations.json",
-    "deploy": "s3cmd sync --verbose --acl-public build/ s3://republik-assets/dynamic-components/talk-to-the-machine/",
-    "deploy:nn-assets": "s3cmd sync --verbose --acl-public src/components/NeuralNetwork/assets/ s3://republik-assets/dynamic-components/talk-to-the-machine/neural-network/",
-    "deploy:sort-assets": "s3cmd sync --verbose --acl-public src/components/Sort/assets/ s3://republik-assets/dynamic-components/talk-to-the-machine/sort/"
+    "deploy": "s3cmd sync --exclude '.DS_Store' --verbose --acl-public build/ s3://republik-assets/dynamic-components/talk-to-the-machine/"
   },
   "repository": {
     "type": "git",

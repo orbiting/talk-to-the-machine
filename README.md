@@ -20,12 +20,8 @@ npm run translations
 ### Deploy
 
 ```bash
-echo "Custom code:"
 npm run build
 npm run deploy
-echo "Vendor code and assets:"
-npm run deploy:nn-assets
-npm run deploy:sort-assets
 ```
 
 ### Clear CDN
@@ -38,4 +34,4 @@ Goto https://app.keycdn.com/zones/purgeurl/87880 and enter:
 /s3/republik-assets/dynamic-components/talk-to-the-machine/part3.js
 ```
 
-Optionally also add asset files (babel, tf, model and test data).
+If you change asset files (like babel.min.js, tf.min.js, model and test data) be sure to purge those too.
