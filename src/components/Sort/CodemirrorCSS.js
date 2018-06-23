@@ -1,10 +1,14 @@
 import React from 'react'
 
+import {
+  fontFamilies
+} from '@project-r/styleguide'
+
 const baseCss = `/* BASICS */
 
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
-  font-family: monospace;
+  font-family: ${fontFamilies.monospaceRegular};
   height: 300px;
   color: black;
   direction: ltr;

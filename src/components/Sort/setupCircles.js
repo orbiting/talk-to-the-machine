@@ -6,8 +6,24 @@ import {
   drag
 } from 'd3'
 
+import { css } from 'glamor'
+
+import {
+  fontFamilies
+} from '@project-r/styleguide'
+
 export const CIRCLE_PADDING = 30
- 
+
+const styles = {
+  circle: css({
+    fontFamily: fontFamilies.monospaceRegular,
+    cursor: ['move', '-webkit-grab'],
+    ':active': {
+      cursor: ['-webkit-grabbing']
+    }
+  })
+}
+
 function endAll(transition, onEnd) {
   if (!onEnd) {
     return
@@ -69,6 +85,7 @@ export default ({node, x, domain, colorScale, onChange}) => {
     const circles = svg.selectAll('g').data(circleData, d => d.label)
     const newCircles = circles.enter().append('g')
       .attr('transform', d => `translate(${[d.x, d.y]})`)
+      .attr('class', styles.circle)
       .call(drag()
         .on('start', dragstarted)
         .on('drag', dragged)

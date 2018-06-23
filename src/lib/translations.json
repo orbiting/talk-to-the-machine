@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-23T22:41:55.440Z",
+  "updated": "2018-06-23T23:17:29.221Z",
   "title": "live",
   "data": [
     {
@@ -80,7 +80,7 @@
     },
     {
       "key": "sort/controls/reset",
-      "value": "Zurücksetzen"
+      "value": "zurücksetzen"
     },
     {
       "key": "sort/error",
