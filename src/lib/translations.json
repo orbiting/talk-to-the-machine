@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-21T18:39:20.860Z",
+  "updated": "2018-06-23T08:13:34.026Z",
   "title": "live",
   "data": [
     {
@@ -36,7 +36,7 @@
     },
     {
       "key": "sort/result/correct/manual",
-      "value": "Sie habens irgendwie gelöst. Nicht für alle Fälle, aber für diesen Fall."
+      "value": "Sie habens gelöst. Nicht für alle Fälle, aber für diesen Fall."
     },
     {
       "key": "sort/result/correct/unkown",
@@ -80,7 +80,7 @@
     },
     {
       "key": "sort/phase/1/protip",
-      "value": "ProTip™: {input} ist ein Array und muss verändert werden. Mutieren Sie mit gutem Gewissen."
+      "value": "ProTip™: {input} ist ein Array. 0 ist die erste Zahl und der erste Index im Array."
     },
     {
       "key": "sort/phase/2/title",
@@ -88,7 +88,7 @@
     },
     {
       "key": "sort/phase/2/description",
-      "value": "Bringen Sie 20 Kreise in Ordnung. Sortieren Sie die Zahlen aufsteigend."
+      "value": "Bringen Sie 15 Kreise in Ordnung. Sortieren Sie die Zahlen aufsteigend."
     },
     {
       "key": "sort/phase/2/code",
@@ -104,7 +104,7 @@
     },
     {
       "key": "sort/phase/3/description",
-      "value": "Bringen Sie 50 Kreise in eine aufsteigende Reihenfolge."
+      "value": "Bringen Sie 30 Kreise in eine aufsteigende Reihenfolge."
     },
     {
       "key": "sort/phase/3/code",
