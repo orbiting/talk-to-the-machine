@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-23T21:47:31.162Z",
+  "updated": "2018-06-23T22:41:55.440Z",
   "title": "live",
   "data": [
     {
@@ -100,7 +100,7 @@
     },
     {
       "key": "sort/phase/1/protip",
-      "value": "ProTip™: {input} ist ein Array. 0 ist die erste Zahl und der erste Index im Array."
+      "value": "ProTip™: {input} ist ein Array. {zero} ist die erste Zahl und der erste Index im Array."
     },
     {
       "key": "sort/phase/2/title",

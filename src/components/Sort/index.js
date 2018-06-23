@@ -454,7 +454,8 @@ class Sort extends Component {
           </CodeLabel>
           <br />
           <CodeLabel>{t.elements(`sort/phase/${phase}/protip`, {
-            input: <Ref key='input'>{'input'}</Ref>
+            input: <Ref key='input'>input</Ref>,
+            zero: <Ref key='zero'>0</Ref>
           })}</CodeLabel>
         </Center>
       </div>
