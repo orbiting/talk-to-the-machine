@@ -1,10 +1,38 @@
 {
-  "updated": "2018-06-24T00:34:34.623Z",
+  "updated": "2018-06-24T01:05:22.419Z",
   "title": "live",
   "data": [
     {
-      "key": "sort/placeholder",
+      "key": "sort/code/placeholder",
       "value": "Stärn-Släsch-Kommentar – jetzt sind Sie dran, Ihr Code:"
+    },
+    {
+      "key": "sort/code/function",
+      "value": "Eine Abstraktion, für lesbareren Code!"
+    },
+    {
+      "key": "sort/code/swap/if",
+      "value": "Falls die Zahl an Position {position1} grösser ist als an Position {position2}"
+    },
+    {
+      "key": "sort/code/swap/then",
+      "value": "dann"
+    },
+    {
+      "key": "sort/code/bubble/for1",
+      "value": "Für jedes Element im Array"
+    },
+    {
+      "key": "sort/code/bubble/for2",
+      "value": "und für jede Position im Array"
+    },
+    {
+      "key": "sort/code/bubble/if",
+      "value": "vergleichen wir die Zahlen"
+    },
+    {
+      "key": "sort/code/bubble/then",
+      "value": "und tauschen Sie falls nötig"
     },
     {
       "key": "sort/101/title/closed",
@@ -100,7 +128,7 @@
     },
     {
       "key": "sort/phase/1/protip",
-      "value": "ProTip™: {input} ist ein Array. {zero} ist die erste Zahl und der erste Index im Array."
+      "value": "ProTip™: {input} ist ein Array. {zero} ist die erste Zahl und die erste Position im Array."
     },
     {
       "key": "sort/phase/2/title",

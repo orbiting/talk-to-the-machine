@@ -441,12 +441,12 @@ class Sort extends Component {
               {t('sort/101/if')}<br />
               <CodeExample value={`if (input[0] < input[1]) { /* ${t('sort/101/if/true')} */ }\nelse { /* ${t('sort/101/if/false')} */ }`} />
               {t('sort/101/for')}<br />
-              <CodeExample value={`for (let index = 0; index < input.length; index++) {\n  if (input[index] < input[index + 1]) { /* ${t('sort/101/for/inside')} */ }\n}`} />
+              <CodeExample value={`for (let position = 0; position < input.length; position++) {\n  if (input[position] < input[position + 1]) { /* ${t('sort/101/for/inside')} */ }\n}`} />
               {t('sort/101/for/nested')}<br />
               <CodeExample value={[
-                `for (let aussen = 0; aussen < input.length; aussen++) {`,
-                `  for (let innen = 0; innen < input.length; innen++) {`,
-                `    if (input[innen] < input[innen + 1]) { /* ${t('sort/101/for/nested/inside')} */ }`,
+                `for (let element = 0; element < input.length; element++) {`,
+                `  for (let position = 1; position < input.length; position++) {`,
+                `    if (input[position - 1] > input[position]) { /* ${t('sort/101/for/nested/inside')} */ }`,
                 `  }`,
                 `}`
               ].join('\n')} />

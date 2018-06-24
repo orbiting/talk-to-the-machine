@@ -4,26 +4,36 @@ import {
 
 import { t } from '../../lib/translate'
 
-const PLACEHOLDER_YOUR_CODE = `/* ${t('sort/placeholder')} */`
+const PLACEHOLDER_YOUR_CODE = `/* ${t('sort/code/placeholder')} */`
 export const DEFAULT_CODE = `  ${PLACEHOLDER_YOUR_CODE}\n  `
 
 const swapFnName = `tauschen`
-const swapFnCode = `  function ${swapFnName}(position1, position2) {
+const swapFnCode = `  /* ${t('sort/code/function')} */
+  function ${swapFnName}(position1, position2) {
     let tmp = input[position1]
     input[position1] = input[position2]
     input[position2] = tmp
   }`
 
-const bubbleSort = `  for (let aussen = 0; aussen < input.length; aussen++) {
-    for (let innen = 1; innen < input.length; innen++) {
-      if (input[innen - 1] > input[innen]) {
-        ${swapFnName}(innen, innen - 1)
+const bubbleSort = `  /* ${t('sort/code/bubble/for1')} */
+  for (let element = 0; element < input.length; element++) {
+    /* ${t('sort/code/bubble/for2')} */
+    for (let position = 0; position < input.length; position++) {
+      /* ${t('sort/code/bubble/if')} */
+      if (input[position] > input[position + 1]) {
+        /* ${t('sort/code/bubble/then')} */
+        ${swapFnName}(position, position + 1)
       }
     }
   }`
 
 const genSwapCode = (swap) => [
+  `  /* ${t('sort/code/swap/if', {
+    position1: swap[0],
+    position2: swap[1]
+  })} */`,
   `  if(input[${swap[0]}] > input[${swap[1]}]) {`,
+  `    /* ${t('sort/code/swap/then')} */`,
   `    ${swapFnName}(${swap[0]}, ${swap[1]})`,
   `  }`
 ].join('\n')
