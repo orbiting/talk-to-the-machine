@@ -101,7 +101,7 @@ export default ({node, x, domain, colorScale, onChange}) => {
       .attr('text-anchor', 'middle')
       .attr('dy', '0.36em')
       .attr('fill', d => textColor(colorScale(domain.indexOf(d.label))))
-      .style('font-size', fontSize)
+      .attr('font-size', fontSize)
       .text(d => d.label)
     
     circles.select('circle').attr('r', radius)
