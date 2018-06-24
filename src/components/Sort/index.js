@@ -111,6 +111,7 @@ const normalizeData = (data, answer) => {
   const normalData = data
     .map(d => +d)
     .filter(d => answer.indexOf(d) !== -1)
+    .filter((d, i, all) => all.indexOf(d) === i)
 
   return normalData.concat(
     answer.filter(d => normalData.indexOf(d) === -1)
@@ -396,6 +397,9 @@ class Sort extends Component {
     const recentOffset = Math.max(0, this.state.history.length - 1 - maxRecent)
 
     const smallNote = t(`sort/phase/${phase}/smallNote`, {}, '')
+    const toEdge = windowWidth && width
+      ? -((windowWidth - width) / 2)
+      : 0
 
     return <div>
       <Center style={{paddingBottom: 0}}>
@@ -407,8 +411,8 @@ class Sort extends Component {
           marginBottom: -CIRCLE_PADDING + 20
         }}>
           <div {...styles.historyBand} style={{
-            left: -((windowWidth - width) / 2),
-            right: -((windowWidth - width) / 2),
+            left: toEdge,
+            right: toEdge,
             height: HISTORY_BAND,
             opacity: this.state.history.length >= maxRecent - 1
               ? 1 : 0

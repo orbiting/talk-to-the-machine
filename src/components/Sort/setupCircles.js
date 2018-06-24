@@ -94,6 +94,8 @@ export default ({node, x, domain, colorScale, onChange}) => {
     newCircles.append('circle')
       .attr('r', radius)
       .attr('fill', d => colorScale(domain.indexOf(d.label)))
+    circles.exit().remove()
+
     const fontSize = Math.max(5, Math.min(16, radius))
     newCircles.append('text')
       .attr('text-anchor', 'middle')
