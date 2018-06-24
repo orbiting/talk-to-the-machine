@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-24T09:47:31.025Z",
+  "updated": "2018-06-24T09:57:29.356Z",
   "title": "live",
   "data": [
     {
@@ -128,7 +128,7 @@
     },
     {
       "key": "sort/phase/1/smallNote",
-      "value": "Programmieraufgabe auf dem kleinen Bildschirm zu lösen ist knifflig, mit mehr Platz geht es ringer."
+      "value": "Die Programmieraufgabe auf dem kleinen Bildschirm zu lösen, ist knifflig. Mit mehr Platz geht es besser."
     },
     {
       "key": "sort/phase/1/protip",
@@ -180,7 +180,7 @@
     },
     {
       "key": "sort/compare/credits",
-      "value": "Die Visualisierungen basieren auf Beispielen von <a href=\"https://bl.ocks.org/mbostock/6dcc9a177065881b1bc4\">Mike Bostock</a> und <a href=\"https://beta.observablehq.com/@tmcw/sorting-overview\">Tom MacWright</a>. Ohne Ihnen wären diese interaktiven Visualisierungen nicht möglich gewesen. Vielen Dank!"
+      "value": "Die Visualisierungen basieren auf Beispielen von <a href=\"https://bl.ocks.org/mbostock/6dcc9a177065881b1bc4\">Mike Bostock</a> und <a href=\"https://beta.observablehq.com/@tmcw/sorting-overview\">Tom MacWright</a>. Ohne sie wären diese interaktiven Visualisierungen nicht möglich gewesen. Vielen Dank!"
     },
     {
       "key": "nn/title",
@@ -216,7 +216,7 @@
     },
     {
       "key": "nn/model/untrained/data",
-      "value": "Laden Sie die Daten um es zu trainieren."
+      "value": "Laden Sie die Daten, um es zu trainieren."
     },
     {
       "key": "nn/model/trained",
