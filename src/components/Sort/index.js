@@ -75,6 +75,17 @@ const styles = {
     [mediaQueries.mUp]: {
       display: 'none'
     }
+  }),
+  historyBand: css({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 2,
+    height: HISTORY_BAND,
+    backgroundColor: '#fff',
+    boxShadow: '0 4px 2px 2px #fff',
+    transition: 'opacity 400ms'
   })
 }
 
@@ -140,6 +151,9 @@ class Sort extends Component {
     this.x = scalePoint()
       .domain(answer.map((d, i) => i))
       .padding(1)
+    this.xHistoryBand = scalePoint()
+      .domain(answer.map((d, i) => i))
+      .padding(0.5)
 
     const start = randomWrong(props.answer)
     this.state = {
@@ -186,7 +200,8 @@ class Sort extends Component {
       }
       const newHistory = [...history, nextData.slice()]
       this.setState({
-        history: newHistory
+        history: newHistory,
+        data: nextData
       })
       return newHistory
     }
@@ -203,14 +218,10 @@ class Sort extends Component {
       const data = normalizeData(d, answer)
       if (this.record(data)) {
         return new Promise((resolve) => {
-          const duration = answer.length > 9
-            ? answer.length > 19
-              ? 50 : 200
-            : 400
           this.circles({
             data,
             radius: this.state.radius,
-            duration,
+            duration: this.state.duration,
             onEnd: () => {
               resolve()
             }
@@ -249,18 +260,37 @@ class Sort extends Component {
       return
     }
     const { answer } = this.props
-    this.state.complied.run(this.state.data, () => {
-      return this.update(this.state.data)
-    }).then(returnValue => {
-      const result = returnValue || this.state.data
-      this.update(result).then(() => {
-        this.setState({
-          data: normalizeData(result, answer)
+    const duration = answer.length > 9
+      ? answer.length > 19
+        ? 50 : 200
+      : 400
+
+    const resetState = {
+      duration: 400,
+      isRunning: false
+    }
+    this.setState({
+      duration,
+      isRunning: true
+    }, () => {
+      const input = this.state.data.slice()
+      this.state.complied.run(input, () => {
+        return this.update(input)
+      }).then(returnValue => {
+        const result = returnValue || input
+        this.update(result).then(() => {
+          this.setState({
+            data: normalizeData(result, answer),
+            ...resetState
+          })
         })
       })
-    })
-    .catch((e) => {
-      this.setState({codeError: e.toString()})
+      .catch((e) => {
+        this.setState({
+          codeError: e.toString(),
+          ...resetState
+        })
+      })
     })
   }
   componentDidMount () {
@@ -310,7 +340,11 @@ class Sort extends Component {
     })
   }
   componentDidUpdate (prevProps, prevState) {
-    if (prevState.data !== this.state.data || prevState.width !== this.state.width) {
+    if (
+      prevState.data !== this.state.data ||
+      prevState.width !== this.state.width ||
+      prevState.radius !== this.state.radius
+    ) {
       this.circles({
         data: this.state.data,
         radius: this.state.radius
@@ -320,9 +354,9 @@ class Sort extends Component {
   componentWillUnmount () {
     window.removeEventListener('resize', this.measure)
   }
-  renderLongHistory () {
+  renderHistoryBand () {
     const { answer } = this.props
-    const { history, width } = this.state
+    const { history, width, duration } = this.state
     if (!history.length || !width) {
       return null
     }
@@ -334,17 +368,14 @@ class Sort extends Component {
       width / history.length
     )
 
-    const x = scalePoint()
-      .domain(answer.map((d, i) => i))
-      .padding(0.5)
-      .range([0, HISTORY_BAND])
-      // .round(true)
+    this.xHistoryBand.range([0, HISTORY_BAND])
 
     return <History
       history={history}
       answer={answer}
       colorScale={this.colorScale}
-      x={x}
+      duration={duration}
+      x={this.xHistoryBand}
       strokeWidth={strokeWidth}
       rowHeight={rowHeight}
       orientation='horizontal'
@@ -362,6 +393,7 @@ class Sort extends Component {
 
     const maxRecent = 12
     const recentHistory = this.state.history.slice(-maxRecent)
+    const recentOffset = Math.max(0, this.state.history.length - maxRecent)
 
     const smallNote = t(`sort/phase/${phase}/smallNote`, {}, '')
 
@@ -385,16 +417,11 @@ class Sort extends Component {
             backgroundColor: '#fff',
             boxShadow: '0 4px 2px 2px #fff'
           }} />
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            zIndex: 2,
-            height: HISTORY_BAND,
-            backgroundColor: '#fff',
-            boxShadow: '0 4px 2px 2px #fff'
+          <div {...styles.historyBand} style={{
+            opacity: this.state.history.length > maxRecent
+              ? 1 : 0
           }}>
-            {this.renderLongHistory()}
+            {this.renderHistoryBand()}
           </div>
           <div style={{
             position: 'absolute',
@@ -407,11 +434,9 @@ class Sort extends Component {
               colorScale={this.colorScale}
               x={this.x}
               width={width}
-              time={time}
+              time={time - recentOffset}
               onNext={() => {
-                if (recentHistory.length < maxRecent) {
-                  this.setState({time: time + 1})
-                }
+                this.setState({time: time + 1})
               }} />}
           </div>
           <svg ref={this.setSvg} width={width} height={svgHeight}
