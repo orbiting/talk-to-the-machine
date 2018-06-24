@@ -3,7 +3,8 @@ import { css } from 'glamor'
 import {
   Button, Field, Checkbox,
   Label, Interaction,
-  fontFamilies, Center
+  fontFamilies, Center,
+  colors
 } from '@project-r/styleguide'
 
 import CodemirrorCSS from './CodemirrorCSS'
@@ -28,6 +29,8 @@ import { ChartTitle, ChartLead } from '../ChartTypo'
 import CodeError from './CodeError'
 import History from './History'
 import { generateCode, DEFAULT_CODE } from './generateCode'
+
+const HISTORY_BAND = 90
 
 const monoFontStyle = {
   fontFamily: fontFamilies.monospaceRegular,
@@ -313,6 +316,37 @@ class Sort extends Component {
   componentWillUnmount () {
     window.removeEventListener('resize', this.measure)
   }
+  renderLongHistory () {
+    const { answer } = this.props
+    const { history, width } = this.state
+    if (!history.length || !width) {
+      return null
+    }
+
+    const padding = 2
+    const strokeWidth = Math.min(3, (HISTORY_BAND - answer.length * padding) / answer.length)
+    const rowHeight = Math.min(
+      20,
+      width / history.length
+    )
+
+    const x = scalePoint()
+      .domain(answer.map((d, i) => i))
+      .padding(0.5)
+      .range([0, HISTORY_BAND])
+      // .round(true)
+
+    return <History
+      history={history}
+      answer={answer}
+      colorScale={this.colorScale}
+      x={x}
+      strokeWidth={strokeWidth}
+      rowHeight={rowHeight}
+      orientation='horizontal'
+      width={HISTORY_BAND}
+      time={history.length - 1} />
+  }
   render () {
     const { phase, answer } = this.props
     const { width, svgHeight, data, showWrong, one0one } = this.state
@@ -321,6 +355,9 @@ class Sort extends Component {
       data, answer
     )
     const time = this.state.time || 0
+
+    const maxRecent = 12
+    const recentHistory = this.state.history.slice(-maxRecent)
 
     return <div>
       <Center>
@@ -334,18 +371,40 @@ class Sort extends Component {
         }}>
           <div style={{
             position: 'absolute',
+            top: 0,
+            left: 0,
+            zIndex: 1,
+            height: 1,
+            backgroundColor: '#fff',
+            boxShadow: '0 4px 2px 2px #fff'
+          }} />
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            zIndex: 2,
+            height: HISTORY_BAND,
+            backgroundColor: '#fff',
+            boxShadow: '0 4px 2px 2px #fff'
+          }}>
+            {this.renderLongHistory()}
+          </div>
+          <div style={{
+            position: 'absolute',
             left: 0,
             bottom: svgHeight - CIRCLE_PADDING
           }}>
             {!!width && <History
-              history={this.state.history}
+              history={recentHistory}
               answer={answer}
               colorScale={this.colorScale}
               x={this.x}
               width={width}
               time={time}
               onNext={() => {
-                this.setState({time: time + 1})
+                if (recentHistory.length < maxRecent) {
+                  this.setState({time: time + 1})
+                }
               }} />}
           </div>
           <svg ref={this.setSvg} width={width} height={svgHeight}

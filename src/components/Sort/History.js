@@ -2,10 +2,13 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { scaleLinear, transition } from 'd3'
 
+let id = 0
+
 class History extends Component {
   constructor (props, ...args) {
     super(props, ...args)
 
+    this.id = id++
     this.setCanvas = (canvas) => {
       this.canvas = canvas
       this.ctx = canvas
@@ -99,7 +102,7 @@ class History extends Component {
     }
 
     const { y } = this
-    transition()
+    transition(`History${this.id}`)
       .duration(duration)
       .on('start', () => {
         this.clipStart(time0, time1)
@@ -159,7 +162,10 @@ class History extends Component {
     this.next()
   }
   componentWillReceiveProps (nextProps) {
-    if (nextProps.orientation !== this.props.orientation) {
+    if (
+      nextProps.orientation !== this.props.orientation ||
+      nextProps.rowHeight !== this.props.rowHeight
+    ) {
       this.enrich(nextProps)
     }
   }
@@ -170,7 +176,6 @@ class History extends Component {
     this.draw()
   }
   render () {
-    console.log('ren', this.props.time, this.props.history.length)
     return <canvas ref={this.setCanvas} />
   }
 }
