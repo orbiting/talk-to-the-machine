@@ -52,10 +52,9 @@ export const generateCode = (swap, phase) => ({ code: currentCode, genSolution, 
     if (complied.ast.tokens.find(t => t.value === swapFnName)) {
       addSwapFn = false
     }
-  } else {
-    if (currentCode.indexOf(swapFnCode) !== -1) {
-      addSwapFn = false
-    }
+  }
+  if (currentCode.indexOf(swapFnCode) !== -1) {
+    addSwapFn = false
   }
 
   const isDefaultCode = currentCode === DEFAULT_CODE

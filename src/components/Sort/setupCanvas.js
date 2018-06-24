@@ -60,7 +60,7 @@ export default ({node, x, domain, colorScale}) => {
   }
 
   const clipStart = (time0, time1) => {
-    const { width } = state
+    const { width, isFastUpdate } = state
     const box = [
       [-strokeWidth, time0 ? y(time0) : -strokeWidth],
       [width + strokeWidth, time0 ? y(time0) : -strokeWidth],
@@ -77,7 +77,10 @@ export default ({node, x, domain, colorScale}) => {
     context.closePath()
     context.clip()
 
-    context.lineCap = 'round'
+    // avoid flicker by skipping rounded if running in fast update state
+    if (!isFastUpdate || time0) {
+      context.lineCap = 'round'
+    }
     context.lineJoin = 'round'
   }
   const clipEnd = () => {
@@ -119,23 +122,25 @@ export default ({node, x, domain, colorScale}) => {
   function render(props) {
     state = {
       duration: 400,
+      isFastUpdate: props.isUpdate && props.duration < 150,
       ...props
     }
     setCanvasSize()
-    const { history } = state
+    const { history, duration } = state
     for (let time0 = 0; time0 < time; time0++) {
       const record0 = history[time0]
       const record1 = history[time0 + 1]
       if (!record1) {
         break
       }
-      if (time0 === 0 || time0 === history.length - 2) {
+      const shouldClip = time0 === 0 || time0 === history.length - 2
+      if (shouldClip) {
         clipStart(time0, time0 + 1)
       }
       record0.forEach((d, i) => {
         drawPath(d, i, record1.indexOf(d), time0, time0 + 1, 1)
       })
-      if (time0 === 0 || time0 === history.length - 2) {
+      if (shouldClip) {
         clipEnd()
       }
     }

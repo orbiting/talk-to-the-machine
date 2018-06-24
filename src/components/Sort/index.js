@@ -204,7 +204,8 @@ class Sort extends Component {
           this.canvas({
             width: this.state.width,
             history: this.state.history,
-            duration
+            duration,
+            isUpdate: true
           })
         })
       }
