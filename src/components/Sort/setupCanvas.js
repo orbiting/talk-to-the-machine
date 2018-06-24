@@ -8,10 +8,11 @@ export default ({node, x, domain, colorScale}) => {
   const dpi = window.devicePixelRatio
   const canvas = node
   const context = canvas.getContext('2d')
-  
+
   let innerHeight
-  function setCanvasSize(swaps, width) {
-    innerHeight = (swaps.length - 1) * rowHeight
+  function setCanvasSize() {
+    const { history, width } = state
+    innerHeight = (history.length - 1) * rowHeight
     canvas.width = width * dpi
     canvas.height = (innerHeight +  margin.top + margin.bottom) * dpi
     canvas.style.width = width + 'px'
@@ -19,9 +20,13 @@ export default ({node, x, domain, colorScale}) => {
     context.translate(margin.left, margin.top)
   }
   let time
+  let state = {
+    history: [],
+    width: 280
+  }
   function reset() {
     time = 0
-    setCanvasSize([]) // setting canvas width/height attr clears
+    setCanvasSize() // setting canvas width/height attr clears
   }
   reset()
 
@@ -30,7 +35,6 @@ export default ({node, x, domain, colorScale}) => {
     .range([0, rowHeight])
   
   context.lineWidth = 6
-  context.lineCap = 'round'
   context.lineJoin = 'round'
   
   function drawPath(v, i0, i1, t0, t1, t) {
@@ -55,7 +59,34 @@ export default ({node, x, domain, colorScale}) => {
     context.stroke()
   }
 
-  function next(history, width, duration) {
+  const clipStart = (time0, time1) => {
+    const { width } = state
+    const box = [
+      [-strokeWidth, time0 ? y(time0) : -strokeWidth],
+      [width + strokeWidth, time0 ? y(time0) : -strokeWidth],
+      [width + strokeWidth, y(time1) + strokeWidth],
+      [-strokeWidth, y(time1) + strokeWidth]
+    ]
+
+    context.save()
+    context.beginPath()
+    context.moveTo(box[0][0], box[0][1])
+    context.lineTo(box[1][0], box[1][1])
+    context.lineTo(box[2][0], box[2][1])
+    context.lineTo(box[3][0], box[3][1])
+    context.closePath()
+    context.clip()
+
+    context.lineCap = 'round'
+    context.lineJoin = 'round'
+  }
+  const clipEnd = () => {
+    context.restore()
+  }
+
+  function next() {
+    const { history, width, duration } = state
+
     const record0 = history[time]
     const record1 = history[time + 1]
     if (!record0 || !record1) {
@@ -64,25 +95,12 @@ export default ({node, x, domain, colorScale}) => {
     const time0 = time
     const time1 = ++time
 
-    const box = [
-      [-strokeWidth, time0 ? y(time0) : -strokeWidth],
-      [width + strokeWidth, time0 ? y(time0) : -strokeWidth],
-      [width + strokeWidth, y(time1) + strokeWidth],
-      [-strokeWidth, y(time1) + strokeWidth]
-    ]
     canvas.style.marginBottom = `-${rowHeight}px`
 
     transition()
       .duration(duration)
       .on('start', function() {
-        context.save()
-        context.beginPath()
-        context.moveTo(box[0][0], box[0][1])
-        context.lineTo(box[1][0], box[1][1])
-        context.lineTo(box[2][0], box[2][1])
-        context.lineTo(box[3][0], box[3][1])
-        context.closePath()
-        context.clip()
+        clipStart(time0, time1)
       })
       .tween('path', function() {
         return function(t) {
@@ -94,23 +112,34 @@ export default ({node, x, domain, colorScale}) => {
         }
       })
       .on('end', function() {
-        context.restore()
+        clipEnd()
         next(history, width, duration)
       })
   }
-  function render({ history, width, duration = 400 }) {
-    setCanvasSize(history, width)
+  function render(props) {
+    state = {
+      duration: 400,
+      ...props
+    }
+    setCanvasSize()
+    const { history } = state
     for (let time0 = 0; time0 < time; time0++) {
       const record0 = history[time0]
       const record1 = history[time0 + 1]
       if (!record1) {
         break
       }
+      if (time0 === 0 || time0 === history.length - 2) {
+        clipStart(time0, time0 + 1)
+      }
       record0.forEach((d, i) => {
         drawPath(d, i, record1.indexOf(d), time0, time0 + 1, 1)
       })
+      if (time0 === 0 || time0 === history.length - 2) {
+        clipEnd()
+      }
     }
-    next(history, width, duration)
+    next()
   }
   render.reset = reset
   
