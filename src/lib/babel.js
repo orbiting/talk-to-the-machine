@@ -48,6 +48,6 @@ export const transformCode = code => {
   // window.ast = extended.ast
   return {
     ast: extended.ast,
-    code: babel.transform(extended.code, {presets: ['es2015']}).code
+    code: babel.transform(extended.code, {presets: ['es2015-loose', 'stage-2']}).code
   }
 }
