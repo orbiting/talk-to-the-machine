@@ -36,12 +36,14 @@ class History extends PureComponent {
   }
   clipStart (time0, time1) {
     const { ctx, oContext, y } = this
-    const { width, isFastUpdate, strokeWidth } = this.props
+    const { width, isRunning, duration, strokeWidth } = this.props
+    const y0 = time0 ? Math.floor(y(time0)) : -Math.floor(strokeWidth)
+    const y1 = Math.ceil(y(time1) + strokeWidth)
     const box = [
-      [-strokeWidth, time0 ? y(time0) : -strokeWidth],
-      [width + strokeWidth, time0 ? y(time0) : -strokeWidth],
-      [width + strokeWidth, y(time1) + strokeWidth],
-      [-strokeWidth, y(time1) + strokeWidth]
+      [-strokeWidth, y0],
+      [width + strokeWidth, y0],
+      [width + strokeWidth, y1],
+      [-strokeWidth, y1]
     ]
 
     ctx.save()
@@ -54,10 +56,11 @@ class History extends PureComponent {
     ctx.clip()
 
     // avoid flicker by skipping rounded if running in fast update state
-    if (!isFastUpdate || time0) {
-      ctx.lineCap = 'round'
-    }
-    ctx.lineJoin = 'round'
+    // !(isRunning && duration < 250) || 
+    // if (time0 === 0) {
+    // ctx.lineCap = 'round'
+    // }
+    // ctx.lineJoin = 'round'
   }
   clipEnd () {
     this.ctx.restore()
@@ -66,16 +69,27 @@ class History extends PureComponent {
     const { ctx, oContext, y } = this
     const { x, strokeWidth, answer, colorScale } = this.props
     ctx.beginPath()
-    oContext.moveTo(x(i0), y(t0))
-    if (i0 === i1 || t < 1 / 3) {
-      oContext.lineTo(x(i0), y(t0) + (y(t1) - y(t0)) * Math.max(t, 1e-4))
+    oContext.moveTo(x(i0), Math.floor(y(t0)))
+    if (i0 === i1) {
+      oContext.lineTo(
+        x(i0),
+        Math.ceil(y(t0) + (y(t1) - y(t0)) * Math.max(t, 1e-4))
+      )
+    } else if (t < 1 / 3) {
+      oContext.lineTo(
+        x(i0),
+        y(t0) + (y(t1) - y(t0)) * Math.max(t, 1e-4)
+      )
     } else {
       oContext.lineTo(x(i0), y(t0) + (y(t1) - y(t0)) / 3)
       if (t < 2 / 3) {
         oContext.lineTo(x(i0) + (x(i1) - x(i0)) * (t - 1 / 3) * 3, y(t0) + (y(t1) - y(t0)) * t)
       } else {
         oContext.lineTo(x(i1), y(t0) + (y(t1) - y(t0)) * 2 / 3)
-        oContext.lineTo(x(i1), y(t0) + (y(t1) - y(t0)) * t)
+        oContext.lineTo(
+          x(i1),
+          Math.ceil(y(t0) + (y(t1) - y(t0)) * t)
+        )
       }
     }
     ctx.lineWidth = strokeWidth + 2
@@ -108,7 +122,12 @@ class History extends PureComponent {
         this.clipStart(time0, time1)
       })
       .tween('path', () => t => {
-        this.oContext.clearRect(-strokeWidth, -strokeWidth + y(time0), width + strokeWidth * 2, rowHeight + strokeWidth * 2)
+        this.oContext.clearRect(
+          -strokeWidth,
+          -strokeWidth + y(time0),
+          width + strokeWidth * 2,
+          rowHeight + strokeWidth * 2
+        )
         record0.forEach((d, i) => {
           this.drawPath(d, i, record1.indexOf(d), time0, time1, t)
         })
@@ -118,12 +137,13 @@ class History extends PureComponent {
         }
       })
       .on('interrupt', () => {
+        // console.log('interrupt')
+        this.clipEnd()
         record0.forEach((d, i) => {
           record0.forEach((d, i) => {
             this.drawPath(d, i, record1.indexOf(d), time0, time1, 1)
           })
         })
-        this.clipEnd()
         this.props.onNext && this.props.onNext(time0, time1)
       })
       .on('end', () => {
@@ -144,10 +164,10 @@ class History extends PureComponent {
       this.ctx.translate(0, strokeWidth)
     } else {
       this.canvas.height = width * dpi
-      this.canvas.width = (innerHeight +  strokeWidth * 2) * dpi
+      this.canvas.width = innerHeight * dpi
       this.canvas.style.height = width + 'px'
       this.ctx.scale(dpi, dpi)
-      this.ctx.translate(strokeWidth, 0)
+      this.ctx.translate(0, 0)
     }
 
     for (let time0 = 0; time0 < time; time0++) {
@@ -185,7 +205,7 @@ class History extends PureComponent {
     this.draw()
   }
   render () {
-    return <canvas ref={this.setCanvas} />
+    return <canvas style={this.props.style} ref={this.setCanvas} />
   }
 }
 

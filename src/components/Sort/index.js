@@ -19,7 +19,6 @@ import {
 } from 'd3'
 
 import setupCircles, { CIRCLE_PADDING } from './setupCircles'
-import setupCanvas from './setupCanvas'
 import randomWrong from '../../lib/randomWrong'
 import { transformCode, CHECK_FN_NAME } from '../../lib/babel'
 
@@ -82,9 +81,8 @@ const styles = {
     left: 0,
     right: 0,
     zIndex: 2,
-    height: HISTORY_BAND,
     backgroundColor: '#fff',
-    boxShadow: '0 4px 2px 2px #fff',
+    // boxShadow: '0 4px 2px 2px #fff',
     transition: 'opacity 400ms'
   })
 }
@@ -162,7 +160,8 @@ class Sort extends Component {
       code: DEFAULT_CODE,
       autoRun: true,
       history: [start.slice()],
-      svgHeight: 0
+      svgHeight: 0,
+      time: 0
     }
     this.setRef = ref => {
       this.ref = ref
@@ -187,6 +186,9 @@ class Sort extends Component {
           // })
 
           this.setState({width, radius, svgHeight})
+        }
+        if (window.innerWidth !== this.state.windowWidth) {
+          this.setState({windowWidth: window.innerWidth})
         }
       }
       return this.state
@@ -256,7 +258,8 @@ class Sort extends Component {
     })
   }
   runCode () {
-    if (!this.state.complied) {
+    const { complied } = this.state
+    if (!complied) {
       return
     }
     const { answer } = this.props
@@ -274,23 +277,22 @@ class Sort extends Component {
       isRunning: true
     }, () => {
       const input = this.state.data.slice()
-      this.state.complied.run(input, () => {
-        return this.update(input)
-      }).then(returnValue => {
-        const result = returnValue || input
-        this.update(result).then(() => {
+      complied.run(input, () => this.update(input))
+        .then(returnValue => {
+          const result = returnValue || input
+          this.update(result).then(() => {
+            this.setState({
+              data: normalizeData(result, answer),
+              ...resetState
+            })
+          })
+        })
+        .catch((e) => {
           this.setState({
-            data: normalizeData(result, answer),
+            codeError: e.toString(),
             ...resetState
           })
         })
-      })
-      .catch((e) => {
-        this.setState({
-          codeError: e.toString(),
-          ...resetState
-        })
-      })
     })
   }
   componentDidMount () {
@@ -356,17 +358,16 @@ class Sort extends Component {
   }
   renderHistoryBand () {
     const { answer } = this.props
-    const { history, width, duration } = this.state
+    const { history, width, duration, time, windowWidth } = this.state
     if (!history.length || !width) {
       return null
     }
 
     const padding = 2
     const strokeWidth = Math.min(3, (HISTORY_BAND - answer.length * padding) / answer.length)
-    const rowHeight = Math.min(
-      20,
-      width / history.length
-    )
+
+    const breakoutWidth = windowWidth
+    const rowHeight = breakoutWidth / (history.length - 1)
 
     this.xHistoryBand.range([0, HISTORY_BAND])
 
@@ -384,57 +385,58 @@ class Sort extends Component {
   }
   render () {
     const { phase, answer } = this.props
-    const { width, svgHeight, data, showWrong, one0one } = this.state
+    const { width, windowWidth, svgHeight, data, showWrong, one0one, time, isRunning, duration } = this.state
 
     const isSolved = deepEqual(
       data, answer
     )
-    const time = this.state.time || 0
 
     const maxRecent = 12
     const recentHistory = this.state.history.slice(-maxRecent)
-    const recentOffset = Math.max(0, this.state.history.length - maxRecent)
+    const recentOffset = Math.max(0, this.state.history.length - 1 - maxRecent)
 
     const smallNote = t(`sort/phase/${phase}/smallNote`, {}, '')
 
     return <div>
-      <Center>
+      <Center style={{paddingBottom: 0}}>
         <ChartTitle>{t(`sort/phase/${phase}/title`)}</ChartTitle>
         <ChartLead>{t(`sort/phase/${phase}/description`)}</ChartLead>
         <div ref={this.setRef} style={{
           position: 'relative',
           paddingTop: 170,
-          overflow: 'hidden',
           marginBottom: -CIRCLE_PADDING + 20
         }}>
-          <div style={{
-            position: 'absolute',
-            top: -4,
-            left: 0,
-            right: 0,
-            zIndex: 1,
-            height: 1,
-            backgroundColor: '#fff',
-            boxShadow: '0 4px 2px 2px #fff'
-          }} />
           <div {...styles.historyBand} style={{
-            opacity: this.state.history.length > maxRecent
+            left: -((windowWidth - width) / 2),
+            right: -((windowWidth - width) / 2),
+            height: HISTORY_BAND,
+            opacity: this.state.history.length >= maxRecent - 1
               ? 1 : 0
           }}>
             {this.renderHistoryBand()}
           </div>
           <div style={{
             position: 'absolute',
+            overflow: 'hidden',
             left: 0,
+            top: 0,
+            right: 0,
             bottom: svgHeight - CIRCLE_PADDING
           }}>
             {!!width && <History
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0
+              }}
               history={recentHistory}
               answer={answer}
               colorScale={this.colorScale}
               x={this.x}
               width={width}
               time={time - recentOffset}
+              duration={duration}
+              isRunning={isRunning}
               onNext={() => {
                 this.setState({time: time + 1})
               }} />}
