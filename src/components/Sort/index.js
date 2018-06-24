@@ -26,6 +26,7 @@ import { t } from '../../lib/translate'
 
 import { ChartTitle, ChartLead } from '../ChartTypo'
 import CodeError from './CodeError'
+import History from './History'
 import { generateCode, DEFAULT_CODE } from './generateCode'
 
 const monoFontStyle = {
@@ -144,6 +145,9 @@ class Sort extends Component {
     this.setRef = ref => {
       this.ref = ref
     }
+    this.setSvg = svg => {
+      this.svg = svg
+    }
 
     this.measure = () => {
       if (this.ref) {
@@ -173,8 +177,11 @@ class Sort extends Component {
       if (deepEqual(previous, nextData)) {
         return
       }
-      history.push(nextData.slice())
-      return true
+      const newHistory = [...history, nextData.slice()]
+      this.setState({
+        history: newHistory
+      })
+      return newHistory
     }
     this.update = async (d) => {
       if (
@@ -200,12 +207,6 @@ class Sort extends Component {
             onEnd: () => {
               resolve()
             }
-          })
-          this.canvas({
-            width: this.state.width,
-            history: this.state.history,
-            duration,
-            isUpdate: true
           })
         })
       }
@@ -260,7 +261,6 @@ class Sort extends Component {
     this.measure()
 
     const { x, colorScale } = this
-    const { width } = this.state
     const { answer } = this.props
 
     const onChange = (data, subject) => {
@@ -294,12 +294,8 @@ class Sort extends Component {
         })
       }
     }
-    this.canvas = setupCanvas({
-      node: this.ref.firstChild,
-      x, domain: answer, colorScale
-    })
     this.circles = setupCircles({
-      node: this.ref.childNodes[1],
+      node: this.svg,
       x,
       domain: answer,
       colorScale,
@@ -311,10 +307,6 @@ class Sort extends Component {
       this.circles({
         data: this.state.data,
         radius: this.state.radius
-      })
-      this.canvas({
-        width: this.state.width,
-        history: this.state.history
       })
     }
   }
@@ -328,6 +320,7 @@ class Sort extends Component {
     const isSolved = deepEqual(
       data, answer
     )
+    const time = this.state.time || 0
 
     return <div>
       <Center>
@@ -336,14 +329,26 @@ class Sort extends Component {
         <div ref={this.setRef} style={{
           position: 'relative',
           paddingTop: 170,
-          overflow: 'hidden'
+          overflow: 'hidden',
+          marginBottom: -CIRCLE_PADDING + 20
         }}>
-          <canvas style={{
+          <div style={{
             position: 'absolute',
             left: 0,
             bottom: svgHeight - CIRCLE_PADDING
-          }} />
-          <svg width={width} height={svgHeight}
+          }}>
+            {!!width && <History
+              history={this.state.history}
+              answer={answer}
+              colorScale={this.colorScale}
+              x={this.x}
+              width={width}
+              time={time}
+              onNext={() => {
+                this.setState({time: time + 1})
+              }} />}
+          </div>
+          <svg ref={this.setSvg} width={width} height={svgHeight}
             style={{position: 'relative'}} />
         </div>
         <Label>{t(`sort/phase/${phase}/code`)}</Label>
@@ -395,6 +400,7 @@ class Sort extends Component {
             this.setState({
               start,
               data: start,
+              time: 0,
               history: [start.slice()],
               genSwaps: undefined,
               genSolution: undefined,
@@ -404,7 +410,6 @@ class Sort extends Component {
                 complied: undefined
               })
             })
-            this.canvas.reset()
           }}>{t('sort/controls/reset')}</a>
           <br />
           <br />

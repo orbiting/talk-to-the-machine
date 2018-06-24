@@ -12,7 +12,7 @@ import {
   fontFamilies
 } from '@project-r/styleguide'
 
-export const CIRCLE_PADDING = 30
+export const CIRCLE_PADDING = 50
 
 const styles = {
   circle: css({
