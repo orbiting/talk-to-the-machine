@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-23T23:48:32.895Z",
+  "updated": "2018-06-24T00:34:34.623Z",
   "title": "live",
   "data": [
     {
@@ -16,7 +16,7 @@
     },
     {
       "key": "sort/101/swap",
-      "value": "Erste Zahl mit zweiter tauschen"
+      "value": "Erste Position mit zweiter tauschen"
     },
     {
       "key": "sort/101/swap/tmp",
@@ -44,7 +44,7 @@
     },
     {
       "key": "sort/101/for/nested",
-      "value": "Jedes mit jedem vergleichen? Verschachteln!"
+      "value": "Jede Position mit jeder vergleichen? Verschachteln!"
     },
     {
       "key": "sort/101/for/nested/inside",
