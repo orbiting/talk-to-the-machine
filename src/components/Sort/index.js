@@ -549,8 +549,8 @@ class Sort extends Component {
               {t('sort/101/for/nested')}<br />
               <CodeExample value={[
                 `for (let element = 0; element < input.length; element++) {`,
-                `  for (let position = 1; position < input.length; position++) {`,
-                `    if (input[position - 1] > input[position]) { /* ${t('sort/101/for/nested/inside')} */ }`,
+                `  for (let position = 0; position < input.length; position++) {`,
+                `    if (input[position] > input[position + 1]) { /* ${t('sort/101/for/nested/inside')} */ }`,
                 `  }`,
                 `}`
               ].join('\n')} />
