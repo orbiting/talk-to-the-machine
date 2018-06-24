@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { scaleLinear, transition } from 'd3'
 
 let id = 0
 
-class History extends Component {
+class History extends PureComponent {
   constructor (props, ...args) {
     super(props, ...args)
 
@@ -116,6 +116,15 @@ class History extends Component {
         if (orientation === 'vertical') {
           this.canvas.style.marginBottom = `-${rowHeight * (1 - t)}px`
         }
+      })
+      .on('interrupt', () => {
+        record0.forEach((d, i) => {
+          record0.forEach((d, i) => {
+            this.drawPath(d, i, record1.indexOf(d), time0, time1, 1)
+          })
+        })
+        this.clipEnd()
+        this.props.onNext && this.props.onNext(time0, time1)
       })
       .on('end', () => {
         this.clipEnd()
