@@ -4,7 +4,7 @@ import {
   Button, Field, Checkbox,
   Label, Interaction,
   fontFamilies, Center,
-  colors
+  colors, mediaQueries
 } from '@project-r/styleguide'
 
 import CodemirrorCSS from './CodemirrorCSS'
@@ -69,6 +69,11 @@ const styles = {
     cursor: 'pointer',
     ':hover': {
       color: '#fff'
+    }
+  }),
+  smallNote: css({
+    [mediaQueries.mUp]: {
+      display: 'none'
     }
   })
 }
@@ -151,7 +156,6 @@ class Sort extends Component {
     this.setSvg = svg => {
       this.svg = svg
     }
-
     this.measure = () => {
       if (this.ref) {
         const { width } = this.ref.getBoundingClientRect()
@@ -359,6 +363,8 @@ class Sort extends Component {
     const maxRecent = 12
     const recentHistory = this.state.history.slice(-maxRecent)
 
+    const smallNote = t(`sort/phase/${phase}/smallNote`, {}, '')
+
     return <div>
       <Center>
         <ChartTitle>{t(`sort/phase/${phase}/title`)}</ChartTitle>
@@ -371,8 +377,9 @@ class Sort extends Component {
         }}>
           <div style={{
             position: 'absolute',
-            top: 0,
+            top: -4,
             left: 0,
+            right: 0,
             zIndex: 1,
             height: 1,
             backgroundColor: '#fff',
@@ -413,6 +420,11 @@ class Sort extends Component {
         <Label>{t(`sort/phase/${phase}/code`)}</Label>
         <br />
         <br />
+        {!!smallNote && <div {...styles.smallNote}>
+          <Label>{smallNote}</Label>
+          <br />
+          <br />
+        </div>}
       </Center>
       <div onClick={!isSolved ? (() => {
         this.setState({showWrong: !showWrong})

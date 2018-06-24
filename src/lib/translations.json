@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-24T01:05:22.419Z",
+  "updated": "2018-06-24T09:47:31.025Z",
   "title": "live",
   "data": [
     {
@@ -125,6 +125,10 @@
     {
       "key": "sort/phase/1/code",
       "value": "Schreiben Sie etwas Javascript, um die Kreise zu sortieren. Ein kleines Einmaleins dazu finden Sie unter dem Eingabefeld. Total überfordert? Sie können die Kreise auch per Hand bewegen und in die richtige Reihenfolge bekommen."
+    },
+    {
+      "key": "sort/phase/1/smallNote",
+      "value": "Programmieraufgabe auf dem kleinen Bildschirm zu lösen ist knifflig, mit mehr Platz geht es ringer."
     },
     {
       "key": "sort/phase/1/protip",
