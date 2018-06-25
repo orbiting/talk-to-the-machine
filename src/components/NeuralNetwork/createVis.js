@@ -279,7 +279,7 @@ function createVis({ canvas, width }) {
       drawResults(results)
     })
   }
-  const drawResultsWhenEv = debounce(drawResultsOnNAF, 50)
+  const drawResultsWhenEv = debounce(drawResultsOnNAF, 200)
   // throttle or debounce? leading: false, maxWait: 1000
 
   let lastTopology
