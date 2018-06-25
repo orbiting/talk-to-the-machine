@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-24T09:57:29.356Z",
+  "updated": "2018-06-25T17:16:07.087Z",
   "title": "live",
   "data": [
     {
@@ -249,6 +249,14 @@
     {
       "key": "nn/credits",
       "value": "Datenquelle: <a href=\"http://yann.lecun.com/exdb/mnist/\">MNIST</a>. Vielen Dank an <a href=\"https://twitter.com/tafsiri\">Yannick Assogba</a> und <a href=\"https://github.com/garamond\">Andreas Moor</a> für Ihre Unterstützung bei der Entwicklung dieser Visualisierung."
+    },
+    {
+      "key": "nn/unsupported",
+      "value": "Ihr Browser ist leider zu alt für dieses Beispiel. Bitte nutzen Sie eine aktuelle Version von Firefox, Chrome, Safari oder Edge."
+    },
+    {
+      "key": "nn/unsupported/firefox",
+      "value": "Jetzt Firefox herunterladen"
     }
   ]
 }

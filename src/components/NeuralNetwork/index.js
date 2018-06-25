@@ -15,7 +15,7 @@ import { loadData, train } from './data'
 import readTopology from './readTopology'
 
 import { ChartTitle, ChartLead } from '../ChartTypo'
-
+import inModernBrowser from './inModernBrowser'
 
 const styles = {
   input: css({
@@ -220,4 +220,4 @@ class NeuralNetwork extends Component {
   }
 }
 
-export default NeuralNetwork
+export default inModernBrowser(NeuralNetwork)
