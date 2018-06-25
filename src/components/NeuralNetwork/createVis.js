@@ -10,11 +10,14 @@ import {
   interpolatePiYG,
   range,
   line as d3Line,
-  curveBundle
+  // curveBundle,
+  linkHorizontal
 } from 'd3'
 
 const HIDDEN_CONNECTIONS = []
 const DRAW_RESULT = true
+
+const blockDpi = 2
 
 function createVis({ canvas, width }) {
   const dpi = window.devicePixelRatio
@@ -28,6 +31,14 @@ function createVis({ canvas, width }) {
   canvas.style.width = canvasWidth + 'px'
   context.scale(dpi, dpi)
   
+  // const bundledLine = d3Line()
+  //   .curve(curveBundle.beta(1.3))
+  //   .context(context)
+  const link = linkHorizontal()
+    .context(context)
+    .source(d => d[0])
+    .target(d => d[1])
+
   let layersWithCords = []
   function drawTopology(topology) {
     context.clearRect(0, 0, canvasWidth, height)
@@ -40,7 +51,6 @@ function createVis({ canvas, width }) {
       .domain([-1, 1])
       .range([0.001, 0.04])
     
-    const blockDpi = 2
     const piyg = scaleSequential(interpolatePiYG)
       .domain([-0.15, 0.15])
     
@@ -57,7 +67,9 @@ function createVis({ canvas, width }) {
 
       let weights
       if (layer.weights) {
-        xCursor += 20
+        if (layer.weights[0].length > 1) {
+          xCursor += 30
+        }
         const baseWX = xCursor
         weights = layer.weights.map((nodeWeights, i) => {
           const y = yScale(i)
@@ -110,10 +122,6 @@ function createVis({ canvas, width }) {
         weights
       }
     })
-    
-    const line = d3Line()
-      .curve(curveBundle.beta(1.3))
-      .context(context)
 
     layersWithCords.forEach((layer, i, all) => {
       const prev = all[i - 1]
@@ -137,17 +145,24 @@ function createVis({ canvas, width }) {
               const targetX = block.x
               const targetY = block.y
               const blockCenter = [block.cx, block.cy]
-              context.globalAlpha = nodeWeights.length > 1 ? 0.07 : 0.1
+              context.globalAlpha = nodeWeights.length > 1 ? 0.07 : 0.2
               context.beginPath()
-              line([
+              // if (nodeWeights.length > 1) {
+              //   bundledLine([
+              //     [sourceX + prev.size / 2, prevNode.y],
+              //     [block.baseWX - 20, node.y],
+              //     blockCenter
+              //   ])
+              // } else {
+              link([
                 [sourceX + prev.size / 2, prevNode.y],
-                [block.baseWX - 20, node.y],
                 blockCenter
               ])
+              // }
               context.stroke()
-              context.globalAlpha = 0.1
+              context.globalAlpha = nodeWeights.length > 1 ? 0.1 : 0.2
               context.beginPath()
-              line([
+              link([
                 blockCenter,
                 [layer.x - layer.size / 2, node.y]
               ])
@@ -160,7 +175,7 @@ function createVis({ canvas, width }) {
             layer.nodes.forEach((node, i) => {
               const prevNode = prev.nodes[i]
               context.beginPath()
-              line([
+              link([
                 [sourceX + prev.size / 2 + (prev.data.bias ? 4 : 0), prevNode.y],
                 [layer.x - layer.size / 2, node.y]
               ])
@@ -170,7 +185,7 @@ function createVis({ canvas, width }) {
             prev.nodes.forEach((prevNode) => {
               layer.nodes.forEach((node) => {
                 context.beginPath()
-                line([
+                link([
                   [sourceX + prev.size / 2 + (prev.data.bias ? 4 : 0), prevNode.y],
                   [layer.x - layer.size / 2, node.y]
                 ])
@@ -213,8 +228,17 @@ function createVis({ canvas, width }) {
       const layer = layersWithCords[i]
       const { x, size } = layer
 
+      const xEnd = (
+        x +
+        size / 2 +
+        (layer.data.weights
+          ? Math.sqrt(layer.data.weights[0].length) * blockDpi
+          : 0) +
+        1 + // border
+        1 // padding
+      )
       if (i === layersWithCords.length - 1) {
-        context.clearRect(x + 50, 0, 100, height)
+        context.clearRect(xEnd, 0, 100, height)
       }
       const result = results && results[i]
       if (result) {
@@ -253,11 +277,21 @@ function createVis({ canvas, width }) {
         }
         if (i === layersWithCords.length - 1) {
           // console.log('res', result.dataSync())
-          context.font = '48px sans-serif'
-          context.textBaseline = 'middle'
-          context.fillStyle = '#000'
           if (DRAW_RESULT) {
-            context.fillText(result.argMax(1).dataSync(), x + 50, height / 2)
+            const digit = result.argMax(1).dataSync()
+            const rNode = layer.nodes[digit]
+            context.globalAlpha = 0.2
+            context.beginPath()
+            link([
+              [xEnd, rNode.y],
+              [x + 62, height / 2]
+            ])
+            context.stroke()
+            context.globalAlpha = 1
+            context.font = '48px sans-serif'
+            context.textBaseline = 'middle'
+            context.fillStyle = '#000'
+            context.fillText(digit, x + 65, height / 2)
           }
         }
       } else {
