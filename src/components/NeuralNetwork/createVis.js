@@ -2,6 +2,10 @@ import tf from '@tensorflow/tfjs'
 import debounce from 'lodash.debounce'
 
 import {
+  fontFamilies
+} from '@project-r/styleguide'
+
+import {
   max,
   scaleSqrt,
   scaleLinear,
@@ -155,7 +159,7 @@ function createVis({ canvas, width }) {
               //   ])
               // } else {
               link([
-                [sourceX + prev.size / 2, prevNode.y],
+                [sourceX, prevNode.y],
                 blockCenter
               ])
               // }
@@ -177,7 +181,7 @@ function createVis({ canvas, width }) {
               context.beginPath()
               link([
                 [sourceX + prev.size / 2 + (prev.data.bias ? 4 : 0), prevNode.y],
-                [layer.x - layer.size / 2, node.y]
+                [layer.x, node.y]
               ])
               context.stroke()
             })
@@ -187,7 +191,8 @@ function createVis({ canvas, width }) {
                 context.beginPath()
                 link([
                   [sourceX + prev.size / 2 + (prev.data.bias ? 4 : 0), prevNode.y],
-                  [layer.x - layer.size / 2, node.y]
+                  // layer.size / 4 looks best
+                  [layer.x - layer.size / 4, node.y]
                 ])
                 context.stroke()
               })
@@ -278,20 +283,37 @@ function createVis({ canvas, width }) {
         if (i === layersWithCords.length - 1) {
           // console.log('res', result.dataSync())
           if (DRAW_RESULT) {
+            const firstLayer = layersWithCords[0]
+            const y = height / 2
             const digit = result.argMax(1).dataSync()
             const rNode = layer.nodes[digit]
             context.globalAlpha = 0.2
             context.beginPath()
             link([
               [xEnd, rNode.y],
-              [x + 62, height / 2]
+              [x + 62, y]
             ])
             context.stroke()
+
             context.globalAlpha = 1
-            context.font = '48px sans-serif'
+
+            context.beginPath()
+            context.rect(
+              x + 62,
+              y - firstLayer.size / 2,
+              firstLayer.size,
+              firstLayer.size
+            )
+            context.fillStyle = '#fff'
+            context.fill()
+            context.strokeStyle = '#000'
+            context.stroke()
+
+            context.font = `${firstLayer.size}px ${fontFamilies.sansSerifRegular}`
+            context.textAlign = 'center'
             context.textBaseline = 'middle'
             context.fillStyle = '#000'
-            context.fillText(digit, x + 65, height / 2)
+            context.fillText(digit, x + 62 + firstLayer.size / 2, height / 2)
           }
         }
       } else {
