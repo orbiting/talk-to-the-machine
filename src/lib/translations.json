@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-25T17:16:07.087Z",
+  "updated": "2018-06-26T00:38:18.275Z",
   "title": "live",
   "data": [
     {
@@ -244,7 +244,7 @@
     },
     {
       "key": "nn/model/create/warning",
-      "value": "Achtung: Besonders mobile Browser können beim Modellbauen abstürzen. Dies ist nicht weiter schlimm, aber wir haben Sie gewarnt ;)"
+      "value": "Achtung: Einige, vorallem ältere und mobile, Browser können beim Modellbauen abstürzen. Dies ist meist nicht weiter schlimm, aber wir haben Sie gewarnt."
     },
     {
       "key": "nn/credits",
