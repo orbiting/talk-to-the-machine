@@ -7,7 +7,7 @@ import { t } from '../../lib/translate'
 const PLACEHOLDER_YOUR_CODE = `/* ${t('sort/code/placeholder')} */`
 export const DEFAULT_CODE = `  ${PLACEHOLDER_YOUR_CODE}\n  `
 
-const swapFnName = `tauschen`
+const swapFnName = t('sort/code/swap')
 const swapFnCode = `  /* ${t('sort/code/function')} */
   function ${swapFnName}(position1, position2) {
     let tmp = input[position1]

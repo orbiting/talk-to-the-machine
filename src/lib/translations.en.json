@@ -1,0 +1,266 @@
+{
+  "updated": "2018-07-23T22:57:51.602Z",
+  "title": "en",
+  "data": [
+    {
+      "key": "sort/code/placeholder",
+      "value": "Star-slash-comment—your turn, your code:"
+    },
+    {
+      "key": "sort/code/swap",
+      "value": "swap"
+    },
+    {
+      "key": "sort/code/function",
+      "value": "A abstraction, for legible code!"
+    },
+    {
+      "key": "sort/code/swap/if",
+      "value": "if the number at position {position1} is greater than at position {position2}"
+    },
+    {
+      "key": "sort/code/swap/then",
+      "value": "then"
+    },
+    {
+      "key": "sort/code/bubble/for1",
+      "value": "for each element in the array"
+    },
+    {
+      "key": "sort/code/bubble/for2",
+      "value": "and for each position in the array"
+    },
+    {
+      "key": "sort/code/bubble/if",
+      "value": "compare the numbers"
+    },
+    {
+      "key": "sort/code/bubble/then",
+      "value": "and swap if necessary"
+    },
+    {
+      "key": "sort/101/title/closed",
+      "value": "Programming 101?"
+    },
+    {
+      "key": "sort/101/title/open",
+      "value": "Programming 101:"
+    },
+    {
+      "key": "sort/101/swap",
+      "value": "Swap the first position with the second"
+    },
+    {
+      "key": "sort/101/swap/tmp",
+      "value": "A temporary store"
+    },
+    {
+      "key": "sort/101/if",
+      "value": "Is the first one smaller than the second?"
+    },
+    {
+      "key": "sort/101/if/true",
+      "value": "Do something here!"
+    },
+    {
+      "key": "sort/101/if/false",
+      "value": "If not"
+    },
+    {
+      "key": "sort/101/for",
+      "value": "In a loop?"
+    },
+    {
+      "key": "sort/101/for/inside",
+      "value": "Code here!"
+    },
+    {
+      "key": "sort/101/for/nested",
+      "value": "Compare each position to each other? Nest!"
+    },
+    {
+      "key": "sort/101/for/nested/inside",
+      "value": "Action!"
+    },
+    {
+      "key": "sort/result/correct/generic",
+      "value": "Right!"
+    },
+    {
+      "key": "sort/result/correct/manual",
+      "value": "You have solved it. Not for every case, but for this case."
+    },
+    {
+      "key": "sort/result/correct/unkown",
+      "value": "It works! Maybe with a trick or not by mutating. But it works."
+    },
+    {
+      "key": "sort/result/correct/cheat",
+      "value": "Well, using the pre-build sort function is lame. But it solved the problem."
+    },
+    {
+      "key": "sort/result/wrong",
+      "value": "You're not done here. Current: {current}, Ziel: {answer}."
+    },
+    {
+      "key": "sort/controls/label",
+      "value": "Options:"
+    },
+    {
+      "key": "sort/controls/autoRun",
+      "value": "Run code"
+    },
+    {
+      "key": "sort/controls/reset",
+      "value": "reset"
+    },
+    {
+      "key": "sort/error",
+      "value": "You have an error in your code:"
+    },
+    {
+      "key": "sort/phase/1/title",
+      "value": "Learn a new trick!"
+    },
+    {
+      "key": "sort/phase/1/description",
+      "value": "Place the circles in order. Sort the numbers in ascending order."
+    },
+    {
+      "key": "sort/phase/1/code",
+      "value": "Program a bit of Javascript to sort the circles. A small 101 is presented after the input area. Unable to cope? You can move the circles by hand and get them into the right order manually."
+    },
+    {
+      "key": "sort/phase/1/smallNote",
+      "value": "Solving a programing challenge on a small screen is finicky. It's easier on a big screen."
+    },
+    {
+      "key": "sort/phase/1/protip",
+      "value": "ProTip™: {input} is an array. {zero} is the first number and the first position in the array."
+    },
+    {
+      "key": "sort/phase/2/title",
+      "value": "The tedious sorting"
+    },
+    {
+      "key": "sort/phase/2/description",
+      "value": "Put the 15 circles in order. Sort the numbers in ascending order."
+    },
+    {
+      "key": "sort/phase/2/code",
+      "value": "Program a bit of Javascript to sort the circles."
+    },
+    {
+      "key": "sort/phase/2/protip",
+      "value": "ProTip™: {input} is a array and should be mutated. Mutate without hesitation."
+    },
+    {
+      "key": "sort/phase/3/title",
+      "value": "The final test"
+    },
+    {
+      "key": "sort/phase/3/description",
+      "value": "Place the 30 circles in ascending order."
+    },
+    {
+      "key": "sort/phase/3/code",
+      "value": "Program a bit of Javascript to sort the circles. Totally overwhelmed? If you sort the first few circles by hand, we will help you with the rest."
+    },
+    {
+      "key": "sort/phase/3/protip",
+      "value": "ProTip™: {input} is a array and should be mutated. Mutate without hesitation."
+    },
+    {
+      "key": "sort/compare/title",
+      "value": "Sort algorithms in comparison"
+    },
+    {
+      "key": "sort/compare/description",
+      "value": "Each procedure has advantages and disadvantages. Often multiple algorithms are used, depending on the input data."
+    },
+    {
+      "key": "sort/compare/your",
+      "value": "Your solution"
+    },
+    {
+      "key": "sort/compare/credits",
+      "value": "The visualizations are based on examples from <a href=\"https://bl.ocks.org/mbostock/6dcc9a177065881b1bc4\">Mike Bostock</a> and <a href=\"https://beta.observablehq.com/@tmcw/sorting-overview\">Tom MacWright</a>. Without them, these interactive visualizations would not be possible. We're very thankful to them."
+    },
+    {
+      "key": "nn/title",
+      "value": "Exercise: Recognizing digits"
+    },
+    {
+      "key": "nn/description",
+      "value": "This convolutional neural network uses six layers with up to 16 nodes. That's not a lot — 80 layers or more are not uncommon."
+    },
+    {
+      "key": "nn/draw",
+      "value": "Draw a digit:"
+    },
+    {
+      "key": "nn/draw/clear",
+      "value": "Reset"
+    },
+    {
+      "key": "nn/network",
+      "value": "Watch as your drawing is centered, inverted and fed into the network:"
+    },
+    {
+      "key": "nn/legend",
+      "value": "Legend: The violet and green squares are weights; the black ones are node biases. Green is positive, violet is negative."
+    },
+    {
+      "key": "nn/model/pretrained",
+      "value": "We trained this model in advance and simply loaded it in your browser."
+    },
+    {
+      "key": "nn/model/untrained",
+      "value": "This model has been initialized with somewhat random values in your browser and is not yet trained. It approximately has a chance of 10% to guess the correct digit—by chance."
+    },
+    {
+      "key": "nn/model/untrained/data",
+      "value": "Load the data to train it."
+    },
+    {
+      "key": "nn/model/trained",
+      "value": "This model was initialized and trained in your browser. According to test data it has a {accuracy}% chance to guess the correct digit."
+    },
+    {
+      "key": "nn/model/create/label",
+      "value": "Edit model"
+    },
+    {
+      "key": "nn/model/create/new",
+      "value": "Create new model"
+    },
+    {
+      "key": "nn/model/create/load",
+      "value": "Load data (10mb)"
+    },
+    {
+      "key": "nn/model/create/train",
+      "value": "Train model"
+    },
+    {
+      "key": "nn/model/create/pretrained",
+      "value": "Load pre-trained model again"
+    },
+    {
+      "key": "nn/model/create/warning",
+      "value": "Attention: Creating new models may cause some browsers, especially older and mobile ones, to crash. This usually does not cause further problems, but you have been forewarned."
+    },
+    {
+      "key": "nn/credits",
+      "value": "Data: <a href=\"http://yann.lecun.com/exdb/mnist/\">MNIST</a>. Thanks to <a href=\"https://twitter.com/tafsiri\">Yannick Assogba</a> and <a href=\"https://github.com/garamond\">Andreas Moor</a> for their support in the development of this visualization."
+    },
+    {
+      "key": "nn/unsupported",
+      "value": "Your Browser is unfortunately too old for this example. Please use a current version of Firefox, Chrome, Safari or Edge."
+    },
+    {
+      "key": "nn/unsupported/firefox",
+      "value": "Download the latest Firefox now"
+    }
+  ]
+}

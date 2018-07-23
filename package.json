@@ -4,9 +4,9 @@
   "description": "custom components for the story, three bundles—one per part",
   "main": "index.js",
   "scripts": {
-    "dev": "cd test && node server.js & rollup -c -w",
+    "dev": "rollup -c -w & cd test && node server.js",
     "build": "rollup -c && cp -R src/components/Sort/assets build/sort && cp -R src/components/NeuralNetwork/assets build/neural-network",
-    "translations": "gsheets --key=1FFbrwSf7hiRSwh9t4ORWIxN2SQRx-gUZkL62C-6wdGU --title=live --pretty --out src/lib/translations.json",
+    "translations": "gsheets --key=1FFbrwSf7hiRSwh9t4ORWIxN2SQRx-gUZkL62C-6wdGU --title=de --pretty --out src/lib/translations.de.json && gsheets --key=1FFbrwSf7hiRSwh9t4ORWIxN2SQRx-gUZkL62C-6wdGU --title=en --pretty --out src/lib/translations.en.json",
     "deploy": "s3cmd sync --exclude '.DS_Store' --verbose --acl-public build/ s3://republik-assets/dynamic-components/talk-to-the-machine/"
   },
   "repository": {

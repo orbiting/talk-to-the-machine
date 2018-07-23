@@ -10,10 +10,16 @@ import { join } from 'path'
 const BABEL_STANDALONE_URL = 'https://cdn.republik.space/s3/republik-assets/dynamic-components/talk-to-the-machine/sort/babel.min.js'
 const TF_URL = 'https://cdn.republik.space/s3/republik-assets/dynamic-components/talk-to-the-machine/neural-network/tf.min.js'
 
-export default ['part1.js', 'part2.js', 'part3.js'].map(entryFile => ({
+export default [
+  ['part1.js', 'de'],
+  ['part1.js', 'en', 'part1-en.js'],
+  ['part2.js', 'de'],
+  ['part2.js', 'en', 'part2-en.js'],
+  ['part3.js']
+].map(([entryFile, locale, outputFile]) => ({
   input: join('src', entryFile),
   output: {
-    file: join('build', entryFile),
+    file: join('build', outputFile || entryFile),
     format: 'amd'
   },
   external: [
@@ -24,6 +30,9 @@ export default ['part1.js', 'part2.js', 'part3.js'].map(entryFile => ({
     TF_URL
   ],
   plugins: [
+    locale && replace({
+      'translations.$locale.json': `translations.${locale}.json`
+    }),
     alias({
       'babel-standalone': BABEL_STANDALONE_URL,
       '@tensorflow/tfjs': TF_URL
@@ -45,8 +54,7 @@ export default ['part1.js', 'part2.js', 'part3.js'].map(entryFile => ({
     resolve(),
     commonjs(),
     replace({
-       'process.env.NODE_ENV': JSON.stringify('production')
-       // 'process.env': JSON.stringify('({})')
+      'process.env.NODE_ENV': JSON.stringify('production')
     })
-  ]
+  ].filter(Boolean)
 }))

@@ -1,10 +1,14 @@
 {
-  "updated": "2018-06-26T00:38:18.275Z",
-  "title": "live",
+  "updated": "2018-07-23T22:57:51.602Z",
+  "title": "de",
   "data": [
     {
       "key": "sort/code/placeholder",
       "value": "Stärn-Släsch-Kommentar – jetzt sind Sie dran, Ihr Code:"
+    },
+    {
+      "key": "sort/code/swap",
+      "value": "tauschen"
     },
     {
       "key": "sort/code/function",
